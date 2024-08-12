@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
+using EntityLayer.TravelDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,9 +33,9 @@ namespace TravelStaffAPI.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult Create(Travel travel)
+        public IActionResult Create(CreateTravelDto travel)
         {
-            _travelService.TAdd(travel);
+            _travelService.TAdd(new Travel { City = travel.City, StartDate = travel.StartDate, EndDate = travel.EndDate,Description=travel.Description, Stay = travel.Stay, Vehicle = travel.Vehicle, StaffID = travel.StaffID , StatusID = travel.StatusID });
             return StatusCode(StatusCodes.Status201Created);
         }
 

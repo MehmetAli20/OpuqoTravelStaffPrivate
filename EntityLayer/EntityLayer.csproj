@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TravelDTOs\" />
+    <Folder Include="DTOs\TravelDTOs\" />
   </ItemGroup>
 
 </Project>

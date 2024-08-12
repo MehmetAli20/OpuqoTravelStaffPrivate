@@ -16,13 +16,14 @@ namespace EntityLayer.Concrete
         public string Name { get; set; }
         public string Surname { get; set; }
         public bool Active { get; set; }
-        public virtual List<Travel> Travels { get; set; }
         public bool IsAdmin { get; set; }
-               
-        //[ForeignKey("AdminID")]
-        //public int AdminID { get; set; }
-        //public Admin Admin { get; set; }
-        
-        //public List<Admin> Admins { get; set; }
+
+        [ForeignKey("AdminID")]
+        public int? AdminID { get; set; }
+        public Staff Admin { get; set; }
+
+        public virtual List<Staff> Staffs { get; set; }
+        public virtual List<Travel> Travels { get; set; }
+        public virtual List<Travel> TravelAdmins { get; set; }
     }
 }
