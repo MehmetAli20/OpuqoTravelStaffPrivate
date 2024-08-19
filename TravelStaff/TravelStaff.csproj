@@ -25,4 +25,44 @@
     <ProjectReference Include="..\EntityLayer\EntityLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\home\mico-html\about.html" />
+    <None Include="wwwroot\home\mico-html\contact.html" />
+    <None Include="wwwroot\home\mico-html\css\bootstrap.css" />
+    <None Include="wwwroot\home\mico-html\css\font-awesome.min.css" />
+    <None Include="wwwroot\home\mico-html\css\responsive.css" />
+    <None Include="wwwroot\home\mico-html\css\style.css" />
+    <None Include="wwwroot\home\mico-html\css\style.css.map" />
+    <None Include="wwwroot\home\mico-html\css\style.scss" />
+    <None Include="wwwroot\home\mico-html\doctor.html" />
+    <None Include="wwwroot\home\mico-html\fonts\fontawesome-webfont.ttf" />
+    <None Include="wwwroot\home\mico-html\fonts\fontawesome-webfont.woff" />
+    <None Include="wwwroot\home\mico-html\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\home\mico-html\images\about-img.jpg" />
+    <None Include="wwwroot\home\mico-html\images\contact-img.jpg" />
+    <None Include="wwwroot\home\mico-html\images\dots.png" />
+    <None Include="wwwroot\home\mico-html\images\logo.png" />
+    <None Include="wwwroot\home\mico-html\images\next.png" />
+    <None Include="wwwroot\home\mico-html\images\post1.jpg" />
+    <None Include="wwwroot\home\mico-html\images\post2.jpg" />
+    <None Include="wwwroot\home\mico-html\images\post3.jpg" />
+    <None Include="wwwroot\home\mico-html\images\post4.png" />
+    <None Include="wwwroot\home\mico-html\images\prev.png" />
+    <None Include="wwwroot\home\mico-html\images\slider-img.jpg" />
+    <None Include="wwwroot\home\mico-html\images\t1.png" />
+    <None Include="wwwroot\home\mico-html\images\t2.png" />
+    <None Include="wwwroot\home\mico-html\images\t3.png" />
+    <None Include="wwwroot\home\mico-html\images\t4.png" />
+    <None Include="wwwroot\home\mico-html\images\team1.jpg" />
+    <None Include="wwwroot\home\mico-html\images\team2.jpg" />
+    <None Include="wwwroot\home\mico-html\images\team3.jpg" />
+    <None Include="wwwroot\home\mico-html\images\treatment-side-img.jpg" />
+    <None Include="wwwroot\home\mico-html\index.html" />
+    <None Include="wwwroot\home\mico-html\js\bootstrap.js" />
+    <None Include="wwwroot\home\mico-html\js\custom.js" />
+    <None Include="wwwroot\home\mico-html\js\jquery-3.4.1.min.js" />
+    <None Include="wwwroot\home\mico-html\testimonial.html" />
+    <None Include="wwwroot\home\mico-html\treatment.html" />
+  </ItemGroup>
+
 </Project>

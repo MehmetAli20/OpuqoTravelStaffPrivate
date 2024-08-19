@@ -1,0 +1,57 @@
+﻿@using EntityLayer.DTOs.StaffDTOs
+@model List<GetStaffDto>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<table id="staffTable" class="table table-bordered">
+				<thead>
+					<tr>
+						<th>StaffID</th>
+						<th>Name</th>
+						<th>Surname</th>
+						<th>IsAdmin</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+				
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function (){
+			// Sayfa yüklendiğinde AJAX çağrısı
+			$.ajax({
+				url: 'https://localhost:7143/api/staff/getall', // API endpoint
+				method: 'GET',
+				contentType: 'application/json',
+				success: function (data) {
+					console.log(data);
+					// Dönen JSON verilerini işleme
+					var rows = '';
+					data.forEach(function (staff) {
+						rows += '<tr>' +
+						    '<td>' + staff.staffID + '</td>' +
+							'<td>' + staff.name + '</td>' +
+							'<td>' + staff.surname + '</td>' +
+							'<td>' + staff.isAdmin + '</td>' +
+							'</tr>';
+					});
+					// Verileri tabloya ekleme
+					$('#staffTable tbody').html(rows);
+				},
+				error: function (xhr, status, error) {
+					console.log('Error: ' + error);
+				}
+			});
+		});
+	</script>

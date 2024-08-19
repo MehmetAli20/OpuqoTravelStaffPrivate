@@ -91,21 +91,20 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("StaffID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StaffID1")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -115,9 +114,11 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Stay")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Vehicle")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TravelID");
@@ -125,8 +126,6 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("AdminID");
 
                     b.HasIndex("StaffID");
-
-                    b.HasIndex("StaffID1");
 
                     b.HasIndex("StatusID");
 
@@ -136,9 +135,9 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("EntityLayer.Concrete.Staff", b =>
                 {
                     b.HasOne("EntityLayer.Concrete.Staff", "Admin")
-                        .WithMany("Staffs")
+                        .WithMany()
                         .HasForeignKey("AdminID")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Admin");
@@ -149,23 +148,19 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("EntityLayer.Concrete.Staff", "Admin")
                         .WithMany()
                         .HasForeignKey("AdminID")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EntityLayer.Concrete.Staff", "Staff")
                         .WithMany("Travels")
                         .HasForeignKey("StaffID")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("EntityLayer.Concrete.Staff", null)
-                        .WithMany("TravelAdmins")
-                        .HasForeignKey("StaffID1");
 
                     b.HasOne("EntityLayer.Concrete.Status", "Status")
                         .WithMany("Travels")
                         .HasForeignKey("StatusID")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Admin");
@@ -177,10 +172,6 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("EntityLayer.Concrete.Staff", b =>
                 {
-                    b.Navigation("Staffs");
-
-                    b.Navigation("TravelAdmins");
-
                     b.Navigation("Travels");
                 });
 

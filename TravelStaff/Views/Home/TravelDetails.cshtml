@@ -1,0 +1,79 @@
+﻿@using EntityLayer.DTOs.TravelDTOs
+@model List<GetTravelDto>
+@{
+	ViewData["Title"] = "TravelDetails";
+}
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<table id="travelTable" class="table table-bordered">
+				<thead>
+					<tr>
+						<th>TravelID</th>
+						<th>City</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Description</th>
+						<th>Stay</th>
+						<th>Vehicle</th>
+						<th>CreateDate</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+         //------------------------------------------------------
+        $(document).ready(function () {
+            var staffID = 1; // Replace with the actual staffID you want to filter by
+
+            // AJAX call to get all travels and filter by staffID
+            $.ajax({
+                url: `https://localhost:7143/api/Travel/getall`, // API endpoint for getting all travels
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log(data);
+
+                    // Filter travels by staffID
+                    var filteredTravels = data.filter(function (travel) {
+                        return travel.staffID === staffID;
+                    });
+
+                    // Generate table rows for the filtered travels
+                    var rows = '';
+                    filteredTravels.forEach(function (travel) {
+                        rows += '<tr>' +
+                            '<td>' + travel.travelID + '</td>' +
+                            '<td>' + travel.city + '</td>' +
+                            '<td>' + new Date(travel.startDate).toLocaleDateString() + '</td>' +
+                            '<td>' + new Date(travel.endDate).toLocaleDateString() + '</td>' +
+                            '<td>' + travel.description + '</td>' +
+                            '<td>' + travel.stay + '</td>' +
+                            '<td>' + travel.vehicle + '</td>' +
+                            '<td>' + new Date(travel.createDate).toLocaleDateString() + '</td>' +
+                            '<td><a href="https://localhost:7055/home/traveldetails/' + travel.travelID + '" target="_blank">View Travel</a></td>' +
+                            '</tr>';
+                    });
+
+                    // Insert the rows into the table body
+                    $('#travelTable tbody').html(rows);
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: ' + error);
+                }
+            });
+        });
+</script>
+
+
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

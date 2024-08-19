@@ -12,7 +12,7 @@ namespace EntityLayer.Concrete
         [Key]
         public int StatusID { get; set; }
         public bool Active { get; set; }
-        public string Information { get; set; }
+        public string Information { get; set; }        
         public List<Travel> Travels { get; set; }
     }
 }

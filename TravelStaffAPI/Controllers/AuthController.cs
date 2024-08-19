@@ -1,7 +1,7 @@
-﻿using EntityLayer.Concrete;
-using BusinessLayer.Abstract;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿//using EntityLayer.Concrete;
+//using BusinessLayer.Abstract;
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Mvc;
 
 //namespace TravelStaffAPI.Controllers
 //{

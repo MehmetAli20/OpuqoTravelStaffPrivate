@@ -8,7 +8,8 @@ namespace EntityLayer.DTOs.StaffDTOs
 {
     public class UpdateStaffDto
     {
-        public string Name { get; set; }
-        public string Surname { get; set; }
+        public bool IsAdmin { get; set; }
+        //public int StaffID { get; set; }
+        //public int AdminID { get; set; }
     }
 }

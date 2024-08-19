@@ -11,19 +11,19 @@ namespace EntityLayer.Concrete
 {
     public class Staff
     {
-        [Key]
         public int StaffID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public bool Active { get; set; }
         public bool IsAdmin { get; set; }
 
-        [ForeignKey("AdminID")]
-        public int? AdminID { get; set; }
+        public int AdminID { get; set; } 
         public Staff Admin { get; set; }
-
-        public virtual List<Staff> Staffs { get; set; }
+  
         public virtual List<Travel> Travels { get; set; }
-        public virtual List<Travel> TravelAdmins { get; set; }
+
+        //public virtual List<Staff> Staffs { get; set; }
+        //public virtual List<Travel> TravelAdmins { get; set; }
+        
     }
 }

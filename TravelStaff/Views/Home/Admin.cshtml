@@ -1,0 +1,67 @@
+﻿@using EntityLayer.DTOs.StaffDTOs
+@model List<GetStaffDto>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<table id="staffTable" class="table table-bordered">
+				<thead>
+					<tr>
+						<th>StaffID</th>
+						<th>Name</th>
+						<th>Surname</th>
+						<th>Staff's Travels</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+				
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var adminId = 1; // Replace with actual AdminID
+
+            $.ajax({
+                url: `https://localhost:7143/api/Staff/getstaffbyadminid/${adminId}`,
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log(data); // Check the data structure
+                    var rows = '';
+                    data.forEach(function (staff) {
+                        rows += '<tr>' +
+                            '<td>' + staff.staffID + '</td>' +
+                            '<td>' + staff.name + '</td>' +
+                            '<td>' + staff.surname + '</td>' +
+                            '<td><button class="view-travels-btn" data-travelid="' + staff.staffID + '">View Travels</button></td>' +
+                            '</tr>';
+                    });
+                    $('#staffTable tbody').html(rows);
+
+                    // Attach event handler for view-travels buttons
+                    $('.view-travels-btn').click(function () {
+                        var staffID = $(this).attr('data-travelid');
+                        // Redirect to the traveldetails page
+                        window.location.href = `https://localhost:7055/home/traveldetails/${staffID}`;
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: ' + error);
+                }
+            });
+        });
+
+
+
+
+	</script>

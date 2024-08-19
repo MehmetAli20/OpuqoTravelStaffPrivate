@@ -1,9 +1,13 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
 using EntityLayer.DTOs.StaffDTOs;
+using EntityLayer.DTOs.StatusDTOs;
 using EntityLayer.StaffDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace TravelStaffAPI.Controllers
 {
@@ -11,20 +15,31 @@ namespace TravelStaffAPI.Controllers
     [ApiController]
     public class StaffController : ControllerBase
     {
-        IStaffService _staffService;
-        public StaffController(IStaffService staffService)
+        private readonly IStaffService _staffService;
+        public IMapper _mapper;
+
+        public StaffController(IStaffService staffService, IMapper mapper)
         {
             _staffService = staffService;
+            _mapper = mapper;
         }
 
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var staff = _staffService.TGetAll();
+            var staff = _mapper.Map<List<GetStaffDto>>(_staffService.TGetStaffsTravels());  
             return Ok(staff);
         }
+        
+        [HttpGet("getstaffbyadminid/{adminId}")]
+        public IActionResult GetStaffByAdminId(int adminId)
+        {
+            var staffEntities = _staffService.GetStaffByAdminId(adminId);
+            var staffDtos = _mapper.Map<List<GetStaffDto>>(staffEntities);
+            return Ok(staffDtos);
+        }
 
-        [HttpGet("getbyid")]
+        [HttpGet("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
             var staff = _staffService.TGetById(id);
@@ -40,7 +55,13 @@ namespace TravelStaffAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _staffService.TAdd(new Staff { Name = staff.Name, Surname = staff.Surname });
+                _staffService.TAdd(new Staff
+                {
+                    Name = staff.Name,
+                    Surname = staff.Surname,
+                    // IsAdmin = staff.IsAdmin,
+                    // AdminID = staff.AdminID
+                });
                 return StatusCode(StatusCodes.Status201Created);
             }
 
@@ -48,13 +69,20 @@ namespace TravelStaffAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(UpdateStaffDto staff)
+        public IActionResult Update(int id, UpdateStaffDto staff)
         {
-            _staffService.TUpdate(new Staff { Name=staff.Name, Surname=staff.Surname });
+            var existingStaff = _staffService.TGetById(id);
+            if (existingStaff == null)
+            {
+                return NotFound("There is no such staff, wrong ID.");
+            }
+            existingStaff.IsAdmin = staff.IsAdmin;
+            _staffService.TUpdate(existingStaff);
             return StatusCode(StatusCodes.Status200OK);
         }
 
-        [HttpDelete("delete")]
+        //DELETE KISMINI SADECE ADMINLER SILECEK SEKILDE AYARLADIM CUNKU GIRIS YAPTIKTAN SONRA CALISIYOR MU KONTROL EDECEGIM.
+        [HttpDelete("delete/{id}")]
         public IActionResult Delete(int id)
         {
             var staff = _staffService.TGetById(id);
@@ -62,7 +90,7 @@ namespace TravelStaffAPI.Controllers
             {
                 return NotFound("Staff not found.");
             }
-            
+
             if (!staff.IsAdmin)
             {
                 return BadRequest("Only admins can delete staff members.");

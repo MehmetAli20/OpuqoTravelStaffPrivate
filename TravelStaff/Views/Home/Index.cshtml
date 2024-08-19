@@ -1,8 +1,32 @@
-﻿@{
+﻿@using EntityLayer.DTOs.StaffDTOs
+@model GetStaffDto
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>You can navigate to the travels page, staff list or home page down below</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <!-- Button 1 -->
+            <a href="https://localhost:7055/home/travels" class="btn btn-primary m-2">
+                Travels
+            </a>
+            
+            <!-- Button 2 -->
+            <a href="https://localhost:7055/home/staff" class="btn btn-secondary m-2">
+                Staff
+            </a>
+
+            <!-- Button 3 -->
+            <a href="https://localhost:7055/home/admin" class="btn btn-success m-2">
+                Admin       
+            </a>
+        </div>
+    </div>
 </div>

@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTOs;
+using EntityLayer.DTOs.StaffDTOs;
+using EntityLayer.DTOs.StatusDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,17 +46,29 @@ namespace TravelStaffAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(Status status)
+        public IActionResult Update(int id, UpdateStatusDto status)
         {
-            _IStatusService.TUpdate(status);
+            var existingStatus = _IStatusService.TGetById(id);
+            if (existingStatus == null)
+            {
+                return NotFound("There is no such status, wrong ID.");
+            }
+            existingStatus.Information = status.Information;
+            _IStatusService.TUpdate(existingStatus);
             return StatusCode(StatusCodes.Status200OK);
         }
 
-        [HttpDelete("delete")]
-        public IActionResult Delete(Status status)
+        [HttpDelete("delete/{id}")]
+        public IActionResult Delete(int id)
         {
-            _IStatusService.TDelete(status);
-            return StatusCode(StatusCodes.Status200OK);
+            var statuss = _IStatusService.TGetById(id);
+            if (statuss == null)
+            {
+                return NotFound("Status Couldn't Found!");
+            }
+            _IStatusService.TDelete(statuss);
+
+            return Ok("Status Deleted Succesfully!");
         }
     }
 }

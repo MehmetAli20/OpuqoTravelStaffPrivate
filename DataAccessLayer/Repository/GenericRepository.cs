@@ -1,5 +1,7 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
+using EntityLayer.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace DataAccessLayer.Repository
         public List<T> GetAll()
         {
             using var c = new Context();
-            return c.Set<T>().ToList();
+            return c.Set<T>().DefaultIfEmpty().ToList();
         }
 
         public void Insert(T t)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.DTOs
+namespace EntityLayer.DTOs.StatusDTOs
 {
     public class CreateStatusDto 
     {

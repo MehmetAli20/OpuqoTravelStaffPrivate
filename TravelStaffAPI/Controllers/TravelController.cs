@@ -1,5 +1,8 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
+using EntityLayer.DTOs.TravelDTOs;
 using EntityLayer.TravelDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,46 +14,72 @@ namespace TravelStaffAPI.Controllers
     public class TravelController : ControllerBase
     {
         ITravelService _travelService;
+        public IMapper _mapper;
 
-        public TravelController(ITravelService travelService)
+        public TravelController(ITravelService travelService,IMapper mapper)
         {
             _travelService = travelService;
+            _mapper = mapper;
         }
 
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var travels = _travelService.TGetAll();
+            var travels = _mapper.Map<List<GetTravelDto>>(_travelService.TGetAll());
             return Ok(travels);
           
         }
 
-        [HttpGet("getbyid")]
+        [HttpGet("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
             var travel = _travelService.TGetById(id);
             return Ok(travel);
         }
-
+        
         [HttpPost("create")]
-        public IActionResult Create(CreateTravelDto travel)
+        public IActionResult Create(CreateTravelDto travelDto)
         {
-            _travelService.TAdd(new Travel { City = travel.City, StartDate = travel.StartDate, EndDate = travel.EndDate,Description=travel.Description, Stay = travel.Stay, Vehicle = travel.Vehicle, StaffID = travel.StaffID , StatusID = travel.StatusID });
-            return StatusCode(StatusCodes.Status201Created);
+            if (ModelState.IsValid)
+            {
+                var travelEntity = _mapper.Map<Travel>(travelDto);
+                _travelService.TAddTravel(travelEntity);
+                var createdTravelDto = _mapper.Map<CreateTravelDto>(travelEntity);
+                return StatusCode(StatusCodes.Status201Created, createdTravelDto);
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        
+        [HttpPut("update/{id}")]
+        public IActionResult Update(int id, UpdateTravelDto travelDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingTravel = _travelService.TGetById(id);
+                if (existingTravel == null)
+                {
+                    return NotFound();
+                }
+                _mapper.Map(travelDto, existingTravel);
+                _travelService.TUpdate(existingTravel);
+                return Ok(existingTravel);
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpPut("update")]
-        public IActionResult Update(Travel travel)
+        [HttpDelete("delete/{id}")]
+        public IActionResult Delete(int id)
         {
-            _travelService.TUpdate(travel);
-            return StatusCode(StatusCodes.Status200OK);
-        }
+            var travel = _travelService.TGetById(id);
+            if (travel == null)
+            {
+                return NotFound("Travel Couldn't Found!");
+            }
 
-        [HttpDelete("delete")]
-        public IActionResult Delete(Travel travel)
-        {
+            // Seyahati sil
             _travelService.TDelete(travel);
-            return StatusCode(StatusCodes.Status200OK);
+
+            return Ok("Travel Deleted Succesfully!");
         }
     }
 }
