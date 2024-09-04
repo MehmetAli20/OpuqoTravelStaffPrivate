@@ -21,7 +21,11 @@ namespace BusinessLayer.Concrete
             _IStaffDal = iStaffDal;
         }
 
-        
+        public Staff Authenticate(string UserName, string password)
+        {
+            return _IStaffDal.GetAll().FirstOrDefault(s => s.UserName == UserName && s.Password == password);
+        }
+
         public List<GetStaffDto> GetStaffByAdminId(int adminId)
         {
             return _IStaffDal.GetStaffByAdminId(adminId);
@@ -61,6 +65,7 @@ namespace BusinessLayer.Concrete
             //    return staffList;
             //}
         }
+        
         public List<GetStaffDto> GetStaffs()
         {
             throw new NotImplementedException();

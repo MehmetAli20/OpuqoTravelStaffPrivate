@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.TravelDTOs
+namespace EntityLayer.DTOs.TravelDTOs
 {
     public class CreateTravelDto
     {
@@ -14,8 +14,8 @@ namespace EntityLayer.TravelDTOs
         public string? Description { get; set; }
         public string Stay { get; set; }
         public string Vehicle { get; set; }
-        public int StaffID { get; set; }
-        public int StatusID { get; set; }
+        public int Id { get; set; }
+        public int StatusID { get; set; } = 1;
         public int? AdminID { get; set; }
     }
 }

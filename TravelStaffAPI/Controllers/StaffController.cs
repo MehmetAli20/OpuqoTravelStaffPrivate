@@ -5,6 +5,7 @@ using EntityLayer.Concrete;
 using EntityLayer.DTOs.StaffDTOs;
 using EntityLayer.DTOs.StatusDTOs;
 using EntityLayer.StaffDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,10 +32,10 @@ namespace TravelStaffAPI.Controllers
             return Ok(staff);
         }
         
-        [HttpGet("getstaffbyadminid/{adminId}")]
-        public IActionResult GetStaffByAdminId(int adminId)
+        [HttpGet("getstaffbyadminid/{userId}")]
+        public IActionResult GetStaffByAdminId(int userId)
         {
-            var staffEntities = _staffService.GetStaffByAdminId(adminId);
+            var staffEntities = _staffService.GetStaffByAdminId(userId);
             var staffDtos = _mapper.Map<List<GetStaffDto>>(staffEntities);
             return Ok(staffDtos);
         }
@@ -59,8 +60,9 @@ namespace TravelStaffAPI.Controllers
                 {
                     Name = staff.Name,
                     Surname = staff.Surname,
+                    Password = staff.Password,
                     // IsAdmin = staff.IsAdmin,
-                    // AdminID = staff.AdminID
+                    //AdminID = staff.AdminID
                 });
                 return StatusCode(StatusCodes.Status201Created);
             }

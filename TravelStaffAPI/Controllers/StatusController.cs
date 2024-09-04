@@ -3,6 +3,7 @@ using EntityLayer.Concrete;
 using EntityLayer.DTOs;
 using EntityLayer.DTOs.StaffDTOs;
 using EntityLayer.DTOs.StatusDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +34,6 @@ namespace TravelStaffAPI.Controllers
         }
 
         [HttpPost("create")]
-
         public IActionResult Create(CreateStatusDto status)
         {
             if (ModelState.IsValid)
@@ -45,7 +45,7 @@ namespace TravelStaffAPI.Controllers
             return StatusCode(StatusCodes.Status400BadRequest);
         }
 
-        [HttpPut("update")]
+        [HttpPut("update/{id}")]
         public IActionResult Update(int id, UpdateStatusDto status)
         {
             var existingStatus = _IStatusService.TGetById(id);

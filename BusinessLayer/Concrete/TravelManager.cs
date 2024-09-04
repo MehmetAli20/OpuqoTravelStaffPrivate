@@ -2,7 +2,7 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
-using EntityLayer.TravelDTOs;
+using EntityLayer.DTOs.TravelDTOs;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -47,9 +47,9 @@ namespace BusinessLayer.Concrete
             return _ITravelDal.GetById(id);
         }
         
-        public List<Travel> TGetStaffsTravels()
+        public List<Travel> TGetStaffsTravels(int id)
         {
-            return _ITravelDal.GetStaffsTravels();
+            return _ITravelDal.GetStaffsTravels(id);
         }
 
         public void TUpdate(Travel t)

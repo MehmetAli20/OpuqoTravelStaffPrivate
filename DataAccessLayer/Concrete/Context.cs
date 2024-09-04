@@ -1,4 +1,5 @@
 ﻿using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Concrete
 {
-    public class Context : DbContext
+    public class Context : IdentityDbContext<Staff, Role<int>, int>
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlServer("server=DESKTOP-5JOA5TP;database=TravelStaffDB;integrated security=true;");
-            optionsBuilder.UseSqlServer("server=DESKTOP-5JOA5TP;database=TravelStaffTest;integrated security=true;");
+            optionsBuilder.UseSqlServer("server=DESKTOP-5JOA5TP;database=TravelStaff_Test5;integrated security=true;");
         }
 
         public DbSet<Travel> Travels { get; set; }
@@ -23,33 +24,35 @@ namespace DataAccessLayer.Concrete
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Self-referencing relationship for Staff
-            modelBuilder.Entity<Staff>()
-                .HasOne(s => s.Admin)
-                .WithMany()
-                .HasForeignKey(s => s.AdminID)
-                .OnDelete(DeleteBehavior.Restrict); // Configure delete behavior
+            //Self - referencing relationship for Staff
+            base.OnModelCreating(modelBuilder);
 
-            // Relationships for Travel
-            modelBuilder.Entity<Travel>()
+           modelBuilder.Entity<Staff>()
+               .HasOne(s => s.Admin)
+               .WithMany()
+               .HasForeignKey(s => s.AdminID)
+               .OnDelete(DeleteBehavior.NoAction); // Configure delete behavior
+
+           // Relationships for Travel
+           modelBuilder.Entity<Travel>()
                 .HasOne(t => t.Staff)
                 .WithMany(s => s.Travels)
-                .HasForeignKey(t => t.StaffID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(t => t.Id)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Travel>()
                 .HasOne(t => t.Admin)
                 .WithMany()
                 .HasForeignKey(t => t.AdminID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Travel>()
                 .HasOne(t => t.Status)
                 .WithMany(s => s.Travels)
                 .HasForeignKey(t => t.StatusID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
+
             
-            base.OnModelCreating(modelBuilder);
 
            // modelBuilder.Entity<Staff>()
            //.HasMany(s => s.Travels)

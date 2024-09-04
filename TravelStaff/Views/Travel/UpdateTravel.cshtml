@@ -1,0 +1,67 @@
+﻿@using EntityLayer.DTOs.TravelDTOs
+@model GetTravelDto
+@{
+    ViewData["Title"] = "Update Travel";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Update Travel</h1>
+
+@if (Model != null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-controller="Travel" asp-action="UpdateTravel" method="post">
+                    <table id="travelTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Travel ID</td>
+                                <td><input type="text" asp-for="TravelID" name="TravelID" value="@Model.TravelID" class="form-control" readonly /></td>
+                            </tr>
+                            <tr>
+                                <td>City</td>
+                                <td><input type="text" asp-for="City" name="City" value="@Model.City" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Start Date</td>
+                                <td><input type="date" asp-for="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>End Date</td>
+                                <td><input type="date" asp-for="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td><textarea asp-for="Description" name="Description" class="form-control">@Model.Description</textarea></td>
+                            </tr>
+                            <tr>
+                                <td>Stay</td>
+                                <td><input type="text" asp-for="Stay" name="Stay" value="@Model.Stay" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Vehicle</td>
+                                <td><input type="text" asp-for="Vehicle" name="Vehicle" value="@Model.Vehicle" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Create Date</td>
+                                <td><input type="text" asp-for="CreateDate" ame="CreateDate" value="@Model.CreateDate.ToString("yyyy-MM-dd")" class="form-control" readonly /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="submit" class="btn btn-primary">Update Travel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>No travel details found.</p>
+}

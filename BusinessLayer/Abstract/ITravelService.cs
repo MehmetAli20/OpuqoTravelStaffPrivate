@@ -1,5 +1,5 @@
 ﻿using EntityLayer.Concrete;
-using EntityLayer.TravelDTOs;
+using EntityLayer.DTOs.TravelDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace BusinessLayer.Abstract
     public interface ITravelService : IGenericService<Travel>
     {
         void TAddTravel(Travel travelEntity);
-        public List<Travel> TGetStaffsTravels();
+        public List<Travel> TGetStaffsTravels(int id);
         //public List<Travel> TGetStaffsTravelsByStaffId(int id);
 
 

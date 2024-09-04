@@ -41,8 +41,10 @@ namespace DataAccessLayer.Repository
         }
         public T GetById(int id)
         {
-            return new Context().Set<T>().Find(id);
+            using (var context = new Context())
+            {
+                return context.Set<T>().Find(id);
+            }
         }
-
     }
 }

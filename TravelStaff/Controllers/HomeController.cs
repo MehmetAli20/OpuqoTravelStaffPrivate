@@ -39,7 +39,7 @@ namespace TravelStaff.Controllers
             //return Redirect(Request.Headers["Referer"].ToString());
             return View();
         }
-        public async Task<IActionResult> TravelDetails(int id)
+        public async Task<IActionResult> TravelDetails(int staffId)
         {
             //HttpClient client = httpClientFactory.CreateClient();
             //HttpResponseMessage response = await client.GetAsync(_baseUrl + "/api/travel/getbyid?id=" + id);

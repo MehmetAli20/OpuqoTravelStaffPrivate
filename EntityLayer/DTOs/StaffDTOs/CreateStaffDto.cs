@@ -11,8 +11,8 @@ namespace EntityLayer.StaffDTOs
     {
         public string Name { get; set; }
         public string Surname { get; set; }
-
-        //public int AdminID { get; set; } = 1;
+        public string Password { get; set; }
+        //public int? AdminID { get; set; } 
         //public bool IsAdmin { get; set; } = false;
     }
 }

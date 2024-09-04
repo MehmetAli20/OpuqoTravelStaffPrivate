@@ -1,0 +1,55 @@
+﻿@using EntityLayer.DTOs.TravelDTOs
+@model List<GetTravelDto>
+
+@{
+    ViewData["Title"] = "Tüm Seyahat Bilgileri";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+  
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">         
+            <table id="travelTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Travel ID</th>
+                        <th>City</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Description</th>
+                        <th>Stay</th>
+                        <th>Vehicle</th>
+                        <th>Create Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.TravelID</td>
+                                <td>@item.City</td>
+                                <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
+                                <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
+                                <td>@item.Description</td>
+                                <td>@item.Stay</td>
+                                <td>@item.Vehicle</td>
+                                <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                                <td><a asp-controller="Travel" asp-action="TravelDetails" asp-route-travelId="@item.TravelID">View Travel</a></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8">No Travel Found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -15,6 +15,6 @@ namespace BusinessLayer.Abstract
         void UpdateStaff(UpdateStaffDto updateStaffDto);
         public List<Staff> TGetStaffsTravels();
         public List<GetStaffDto> GetStaffByAdminId(int adminId);
-
+        public Staff Authenticate(string name, string password);
     }
 }

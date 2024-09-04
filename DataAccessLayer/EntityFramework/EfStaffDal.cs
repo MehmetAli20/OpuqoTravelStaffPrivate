@@ -21,11 +21,11 @@ namespace DataAccessLayer.EntityFramework
             {
                 return context.Staffs.Include("Travels").Where(s => s.AdminID == adminId).Select(s => new GetStaffDto
                 {
-                    StaffID = s.StaffID,
+                    Id = s.Id,
                     Name = s.Name,
                     Surname = s.Surname,
                     IsAdmin = s.IsAdmin,
-                    AdminID = s.AdminID,
+                    //AdminID = s.AdminID ?? 44,
                     //Travels = s.Travels.Select(t => new GetTravelDto
                     //{
                     //    TravelID = t.TravelID,
@@ -43,12 +43,19 @@ namespace DataAccessLayer.EntityFramework
 
             }
         }
-
+        public Staff GetByCredentials(string username, string password)
+        {
+            using (var context = new Context())
+            {
+                return context.Staffs
+                    .FirstOrDefault(s => s.Name == username && s.Password == password);
+            }
+        }
         public Staff GetStaffById(int id)
         {
             using (var context = new Context())
             {
-                return context.Staffs.Include("Travels").FirstOrDefault(x => x.StaffID == id);
+                return context.Staffs.Include("Travels").FirstOrDefault(x => x.Id == id);
             }
         }
 

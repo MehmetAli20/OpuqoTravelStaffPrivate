@@ -1,0 +1,68 @@
+﻿@using EntityLayer.DTOs.TravelDTOs
+@model GetTravelDto
+@{
+    ViewData["Title"] = "TravelDetails";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	var userId = ViewBag.userId;
+}
+
+<h2>Travel Details</h2>
+
+@if (Model != null)
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Seyahat Tablosu</th>
+                <th>Bilgiler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Travel ID</td>
+                <td>@Model.TravelID</td>
+            </tr>
+            <tr>
+                <td>Başlangıç Tarihi</td>
+                <td>@Model.StartDate.ToString("dd MMM yyyy")</td>
+            </tr>
+            <tr>
+                <td>Bitiş Tarihi</td>
+                <td>@Model.EndDate</td>
+            </tr>
+            <tr>
+                <td>Şehir</td>
+                <td>@Model.City</td>
+            </tr>         
+             <tr>
+                <td>Açıklama</td>
+                <td>@Model.Description</td>
+            </tr>
+            <tr>
+                <td>Konaklama</td>
+                <td>@Model.Stay</td>
+            </tr>
+            <tr>
+                <td>Ulaşım</td>
+                <td>@Model.Vehicle</td>
+            </tr>
+            <tr>
+                <td>Oluşturma Tarihi</td>
+                <td>@Model.CreateDate</td>
+            </tr>
+             <tr>
+                <td>Admin ID</td>
+                <td>@Model.AdminID</td>
+            </tr>
+
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No travel details found.</p>
+}
+
+<form asp-action="BackToPreviousPage" method="post">
+    <button type="submit" class="btn btn-primary">Geri Dön</button>
+</form>

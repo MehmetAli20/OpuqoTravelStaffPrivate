@@ -1,0 +1,116 @@
+﻿@model List<EntityLayer.DTOs.StaffDTOs.GetStaffDto>
+@{
+    ViewData["Title"] = "Admin";
+    bool isAdmin = ViewBag.IsAdmin != null && ViewBag.IsAdmin;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Admin List</h1>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Staff ID</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Is Admin</th>
+                <th>Staff's Travel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <th scope="row">@Model[i].Id</th>
+                        <td>@Model[i].Name</td>
+                        <td>@Model[i].Surname</td>
+                        <td>@(Model[i].IsAdmin ? "Yes" : "No")</td>
+						<td><a asp-controller="Travel" asp-action="Travels" asp-route-id="@Model[i].Id">View Travels</a></td>							
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">No records found</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@*<h2>Welcome</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="staffTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        
+                        <th>StaffID</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Staff's Travels</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var staff in Model)
+					{
+						<tr>
+							<td>@staff.Id</td>
+							<td>@staff.Name</td>
+							<td>@staff.Surname</td>
+                            <td><a asp-controller="Travel" asp-action="Travels" asp-route-id="@staff.Id">View Travels</a></td>
+                            @*USER ID HEP ADMINID OLARAK DÖNÜYOR. OYSAKİ USERID İSTEMİYORUM, TIKLANAN SATIRDAKİ STAFFIN ID'SİNİ İSTİYORUM.
+						</tr>
+					}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    *@
+    
+   @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var adminId = 3; // Replace with actual AdminID
+
+            $.ajax({
+                url: `https://localhost:7143/api/Staff/getstaffbyadminid/${adminId}`,
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log(data); // Check the data structure
+                    var rows = '';
+                    data.forEach(function (staff) {
+                        rows += '<tr>' +
+                            '<td>' + staff.id + '</td>' +
+                            '<td>' + staff.name + '</td>' +
+                            '<td>' + staff.surname + '</td>' +
+                            '<td><button class="view-travels-btn" data-travelid="' + staff.id + '">View Travels</button></td>' +
+                            '</tr>';
+                    });
+                    $('#staffTable tbody').html(rows);
+
+                    // Attach event handler for view-travels buttons
+                    $('.view-travels-btn').click(function () {
+                        var staffID = $(this).attr('data-travelid');
+                        // Redirect to the traveldetails page
+                        window.location.href = `https://localhost:7055/home/traveldetails/${staffID}`;                       
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: ' + error);
+                }
+            });
+        });
+
+
+
+
+    </script>*@

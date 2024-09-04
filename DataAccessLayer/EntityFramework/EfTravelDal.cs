@@ -2,7 +2,7 @@
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Repository;
 using EntityLayer.Concrete;
-using EntityLayer.TravelDTOs;
+using EntityLayer.DTOs.TravelDTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,11 +15,11 @@ namespace DataAccessLayer.EntityFramework
     public class EfTravelDal : GenericRepository<Travel>, ITravelDal
     {
 
-        public List<Travel> GetStaffsTravels()
+        public List<Travel> GetStaffsTravels(int id)
         {
             using (var c = new Context())
             {
-                return c.Travels.Include("Staff").DefaultIfEmpty().ToList();
+                return c.Travels.Include("Staff").Where(x=>x.Id==id).ToList();
             }
         }
 

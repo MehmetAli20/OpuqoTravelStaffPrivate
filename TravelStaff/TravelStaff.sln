@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "..\DataA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "..\BusinessLayer\BusinessLayer.csproj", "{B792BA96-8936-469C-ABF3-D8B745C6DC63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelStaffAPI", "..\TravelStaffAPI\TravelStaffAPI.csproj", "{51B35F63-4FEB-43DE-8CE8-F66B751289BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TravelStaffAPI", "..\TravelStaffAPI\TravelStaffAPI.csproj", "{51B35F63-4FEB-43DE-8CE8-F66B751289BA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC2090FF-00AA-4362-8C6A-4CDCB53D6107}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

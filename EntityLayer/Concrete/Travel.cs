@@ -10,6 +10,7 @@ namespace EntityLayer.Concrete
 {
     public class Travel
     {
+        [Key]   
         public int TravelID { get; set; }
         public string City { get; set; }
         public DateTime StartDate { get; set; }
@@ -20,8 +21,7 @@ namespace EntityLayer.Concrete
         public string Vehicle { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
-      
-        public int StaffID { get; set; }
+        public int Id { get; set; }
         public Staff Staff { get; set; }
         
 

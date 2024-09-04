@@ -1,5 +1,5 @@
 ﻿using EntityLayer.Concrete;
-using EntityLayer.TravelDTOs;
+using EntityLayer.DTOs.TravelDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace DataAccessLayer.Abstract
 {
     public interface ITravelDal : IGenericDal<Travel>
     {
-        public List<Travel> GetStaffsTravels();
+        public List<Travel> GetStaffsTravels(int id);
 
         public void TAddTravel(Travel travelEntity);
     }

@@ -13,6 +13,6 @@ namespace DataAccessLayer.Abstract
         public List<Staff> GetStaffsTravels();
         public Staff GetStaffById(int id);
         public List<GetStaffDto> GetStaffByAdminId(int adminId);
-        
+        public Staff GetByCredentials(string username, string password);
     }
 }

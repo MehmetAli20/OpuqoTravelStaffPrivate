@@ -1,0 +1,72 @@
+﻿@using EntityLayer.DTOs.TravelDTOs
+@model CreateTravelDto
+@{
+    ViewData["Title"] = "AddTravel";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var userId = ViewBag.userId;
+}
+
+<h1>Add Travel</h1>
+
+<form asp-action="AddTravel" asp-route-userId=@userId method="post">
+    <h4>YENİ SEYAHAT <span>OLUŞTUR</span></h4>
+    <div class="form-row">
+        <div class="form-group col-lg-4">
+            <label asp-for="City">Şehir Adı</label>
+            <input asp-for="City" class="form-control" id="txtcity" placeholder="">
+        </div>
+        <div class="form-group col-lg-4">
+            <label asp-for="StartDate">Başlangıç Tarihi</label>
+            <div class="input-group date">
+                <input asp-for="StartDate" type="date" id="txtstartDate" class="form-control">
+                <span class="input-group-addon date_icon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group col-lg-4">
+            <label asp-for="EndDate">Bitiş Tarihi</label>
+            <div class="input-group date">
+                <input asp-for="EndDate" type="date" id="txtendDate" class="form-control">
+                <span class="input-group-addon date_icon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group col-lg-4">
+            <label asp-for="Description">Açıklama</label>
+            <input asp-for="Description" type="text" class="form-control" id="txtdescription" placeholder="">
+        </div>
+        <div class="form-group col-lg-4">
+            <label asp-for="Stay">Konaklama</label>
+            <select asp-for="Stay" class="form-control wide" id="txtstay">
+                <option value="Otel">Otel</option>
+                <option value="Kiralık daire">Kiralık daire</option>
+                <option value="Hostel">Hostel</option>
+                <option value="Pansiyon">Pansiyon</option>
+                <option value="Tatil köyü">Tatil köyü</option>
+            </select>
+        </div>
+        <div class="form-group col-lg-4">
+            <label asp-for="Vehicle">Araç</label>
+            <select asp-for="Vehicle" class="form-control wide" id="txtvehicle">
+                <option value="Uçak">Uçak</option>
+                <option value="Otobüs">Otobüs</option>
+                <option value="Özel araç">Özel araç</option>
+                <option value="Servis">Servis</option>
+                <option value="Tren">Tren</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <!-- Removed StaffID and AdminID fields -->
+        <div class="form-group col-lg-4">
+            <label asp-for="StatusID">Status ID</label>
+            <input asp-for="StatusID" type="number" class="form-control" id="txtstatusid" placeholder="">
+        </div>
+    </div>
+    <div class="btn-box">
+        <button type="submit" id="createtravel" class="btn btn-outline-primary">Oluştur</button>
+        <br />
+    </div>
+</form>

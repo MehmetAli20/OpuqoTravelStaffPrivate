@@ -1,0 +1,47 @@
+﻿@using EntityLayer.DTOs.StaffDTOs
+@model RegisterDto
+
+<form asp-controller="Auth" asp-action="Register" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label" ></label>
+        <input asp-for="Email" class="form-control" required />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Surname" class="control-label"></label>
+        <input asp-for="Surname" class="form-control" required />
+        <span asp-validation-for="Surname" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="UserName" class="control-label"></label>
+        <input asp-for="UserName" class="form-control" required />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Pw" class="control-label"></label>
+        <input asp-for="Pw" type="password" class="form-control" required />
+        <span asp-validation-for="Pw" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ConfirmPw" class="control-label"></label>
+        <input asp-for="ConfirmPw" type="password" class="form-control" required />
+        <span asp-validation-for="ConfirmPw" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsAdmin" class="control-label"></label>
+        <input asp-for="IsAdmin" type="checkbox" required />
+        <span asp-validation-for="IsAdmin" class="text-danger"></span>
+    </div>
+    <button asp-controller="Auth" asp-action="Register">Kaydol</button>
+</form>
