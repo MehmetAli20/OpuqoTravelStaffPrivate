@@ -59,11 +59,9 @@ namespace TravelStaffAPI.Controllers
                     AdminID = user.AdminID.Value,
                 }; 
             }
-
             // If the login fails, return an unauthorized response
             return (new LoginReturnDto { Success = false, Message = "Invalid login credentials." });
         }
-
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
@@ -73,10 +71,7 @@ namespace TravelStaffAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             // Yeni bir Staff nesnesi oluştur
-
-
             try
             {
                 // Kullanıcıyı oluştur

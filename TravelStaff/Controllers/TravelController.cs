@@ -21,13 +21,6 @@ namespace TravelStaff.Controllers
             this.httpClientFactory = httpClientFactory;
         }
 
-        //TRAVEL SAYFASINDA ALIRKEN TRAVEL/TRAVELS/ID İLE ALIYOR, USERID İLE ÇEKMEK GEREKİYOR. DÜZELTİLECEK.
-        //TRAVEL SAYFASINDA ALIRKEN TRAVEL/TRAVELS/ID İLE ALIYOR, USERID İLE ÇEKMEK GEREKİYOR. DÜZELTİLECEK.
-        //TRAVEL SAYFASINDA ALIRKEN TRAVEL/TRAVELS/ID İLE ALIYOR, USERID İLE ÇEKMEK GEREKİYOR. DÜZELTİLECEK.
-        //TRAVEL SAYFASINDA ALIRKEN TRAVEL/TRAVELS/ID İLE ALIYOR, USERID İLE ÇEKMEK GEREKİYOR. DÜZELTİLECEK.
-        //TRAVEL SAYFASINDA ALIRKEN TRAVEL/TRAVELS/ID İLE ALIYOR, USERID İLE ÇEKMEK GEREKİYOR. DÜZELTİLECEK.
-        //TRAVEL SAYFASINDA ALIRKEN TRAVEL/TRAVELS/ID İLE ALIYOR, USERID İLE ÇEKMEK GEREKİYOR. DÜZELTİLECEK.
-        //TRAVEL SAYFASINDA ALIRKEN TRAVEL/TRAVELS/ID İLE ALIYOR, USERID İLE ÇEKMEK GEREKİYOR. DÜZELTİLECEK.
         [HttpGet]
         public async Task<IActionResult> Travels(int id)
         {
@@ -73,7 +66,6 @@ namespace TravelStaff.Controllers
             return RedirectToAction("Index", "Home"); // Eğer URL bulunamazsa anasayfaya yönlendirin
         }
     
-
         [HttpGet]
         public async Task<IActionResult> TravelDetails(int travelId)
         {
@@ -97,10 +89,6 @@ namespace TravelStaff.Controllers
 
             return View(new GetTravelDto()); 
         }
-
-
-
-
 
         [HttpGet]
         public async Task<IActionResult> UsersTravels()
@@ -127,7 +115,7 @@ namespace TravelStaff.Controllers
                     //{
                     //    return View(new List<GetTravelDto>());
                     //}
-                    var filteredTravels = allTravels;
+                    var filteredTravels = allTravels; //filtreleme işlemi burada yapılabilir  <------------
 
                     return View(filteredTravels);
                 }
@@ -236,7 +224,7 @@ namespace TravelStaff.Controllers
             HttpResponseMessage response = await client.PutAsync(_baseUrl + "/api/travel/update/" + travelId, data);
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction("Travels") ;
+                return RedirectToAction("Travels", new {id = int.Parse(HttpContext.Session.GetString("userId"))}) ;
             }
             return View();
         }

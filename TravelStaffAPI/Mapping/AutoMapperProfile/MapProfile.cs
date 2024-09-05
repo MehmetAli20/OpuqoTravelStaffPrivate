@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EntityLayer.Concrete;
 using EntityLayer.DTOs;
+using EntityLayer.DTOs.MessageDTOs;
 using EntityLayer.DTOs.StaffDTOs;
 using EntityLayer.DTOs.StatusDTOs;
 using EntityLayer.DTOs.TravelDTOs;
@@ -26,6 +27,10 @@ namespace TravelStaffAPI.Mapping.AutoMapperProfile
             CreateMap<Travel, UpdateTravelDto>().ReverseMap();
             CreateMap<Travel, DeleteTravelDto>().ReverseMap();
             CreateMap<Travel, GetTravelDto>().ReverseMap();
+            CreateMap<Message, GetMessageDto>().ReverseMap();
+            CreateMap<Message, CreateMessageDto>().ReverseMap();
+            CreateMap<Message, UpdateMessageDto>().ReverseMap();
+
             //CreateMap<Staff, GetStaffDto>()
             //.ForMember(dest => dest.Travels, opt => opt.MapFrom(src => src.Travels));
         }

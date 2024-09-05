@@ -30,5 +30,7 @@ namespace EntityLayer.Concrete
 
         public int? AdminID { get; set; } 
         public Staff Admin { get; set; }
+
+        public virtual List<Message> Messages { get; set; }
     }
 }

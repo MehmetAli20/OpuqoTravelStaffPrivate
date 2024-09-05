@@ -20,6 +20,8 @@ namespace DataAccessLayer.Concrete
         public DbSet<Travel> Travels { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -51,38 +53,42 @@ namespace DataAccessLayer.Concrete
                 .WithMany(s => s.Travels)
                 .HasForeignKey(t => t.StatusID)
                 .OnDelete(DeleteBehavior.NoAction);
-
             
+            modelBuilder.Entity<Travel>()
+                .HasMany(t => t.Messages)
+                .WithOne(m => m.Travel)
+                .HasForeignKey(m => m.TravelID)
+                .OnDelete(DeleteBehavior.NoAction);
 
-           // modelBuilder.Entity<Staff>()
-           //.HasMany(s => s.Travels)
-           //.WithOne(t => t.Staff)
-           //.HasForeignKey(t => t.StaffID)
-           //.OnDelete(DeleteBehavior.NoAction); //staff silinirse travelda staffid 
+            // modelBuilder.Entity<Staff>()
+            //.HasMany(s => s.Travels)
+            //.WithOne(t => t.Staff)
+            //.HasForeignKey(t => t.StaffID)
+            //.OnDelete(DeleteBehavior.NoAction); //staff silinirse travelda staffid 
 
-           // modelBuilder.Entity<Staff>()
-           // .HasOne(s => s.Admin)
-           // .WithMany(a => a.Staffs)
-           // .HasForeignKey(s => s.AdminID)
-           // .OnDelete(DeleteBehavior.NoAction);
+            // modelBuilder.Entity<Staff>()
+            // .HasOne(s => s.Admin)
+            // .WithMany(a => a.Staffs)
+            // .HasForeignKey(s => s.AdminID)
+            // .OnDelete(DeleteBehavior.NoAction);
 
-           // //Check Constraint -Veritabanı seviyesinde kontrol ekleme
-           // modelBuilder.Entity<Staff>()
-           //     .HasCheckConstraint("CK_Staff_AdminID_IsAdmin",
-           //         "([IsAdmin] = 1 AND [AdminID] IS NULL) OR ([IsAdmin] = 0 AND [AdminID] IS NOT NULL)");
+            // //Check Constraint -Veritabanı seviyesinde kontrol ekleme
+            // modelBuilder.Entity<Staff>()
+            //     .HasCheckConstraint("CK_Staff_AdminID_IsAdmin",
+            //         "([IsAdmin] = 1 AND [AdminID] IS NULL) OR ([IsAdmin] = 0 AND [AdminID] IS NOT NULL)");
 
 
-           // modelBuilder.Entity<Travel>()
-           //     .HasOne(t => t.Admin)
-           //     .WithMany()
-           //     .HasForeignKey(t => t.AdminID)
-           //     .OnDelete(DeleteBehavior.NoAction);
+            // modelBuilder.Entity<Travel>()
+            //     .HasOne(t => t.Admin)
+            //     .WithMany()
+            //     .HasForeignKey(t => t.AdminID)
+            //     .OnDelete(DeleteBehavior.NoAction);
 
-           // modelBuilder.Entity<Travel>()
-           //     .HasOne(t => t.Status)
-           //     .WithMany(s => s.Travels)
-           //     .HasForeignKey(t => t.StatusID)
-           //     .OnDelete(DeleteBehavior.NoAction);
+            // modelBuilder.Entity<Travel>()
+            //     .HasOne(t => t.Status)
+            //     .WithMany(s => s.Travels)
+            //     .HasForeignKey(t => t.StatusID)
+            //     .OnDelete(DeleteBehavior.NoAction);
 
         }
     }

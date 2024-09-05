@@ -26,6 +26,9 @@ namespace BusinessLayer.DependencyResolvers.Autofac
             builder.RegisterType<StaffManager>().As<IStaffService>().SingleInstance();
             builder.RegisterType<EfStaffDal>().As<IStaffDal>().SingleInstance();
 
+            builder.RegisterType<MessageManager>().As<IMessageService>().SingleInstance();
+            builder.RegisterType<EfMessageDal>().As<IMessageDal>().SingleInstance();
+
             //builder.RegisterType<AdminManager>().As<IAdminService>().SingleInstance();
             //builder.RegisterType<EfAdminDal>().As<IAdminDal>().SingleInstance();
         }
