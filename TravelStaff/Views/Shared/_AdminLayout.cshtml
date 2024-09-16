@@ -212,10 +212,12 @@
 			</div>
 			<div class="main-panel">				
 				<div class="content">
-				@RenderBody()					
+@*				@RenderSection("Scripts", required: false)
+*@					@RenderBody()	
+				
 				</div>
 			</div>
-		
+				@RenderSection("Scripts", required: false)
 			</div>
 	</div>
 	<footer class="footer">

@@ -106,7 +106,7 @@ namespace TravelStaff.Controllers
 
                 if (travelDetail?.getTravelDto != null)
                 {
-                    ViewBag.isFromAdmin = int.Parse(userId) == travelDetail.getTravelDto.AdminID;
+                    //ViewBag.isFromAdmin = int.Parse(userId) == travelDetail.getTravelDto.AdminID;
                     return View(travelDetail);
                 }
             }
