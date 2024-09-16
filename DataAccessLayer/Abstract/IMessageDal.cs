@@ -1,4 +1,5 @@
 ﻿using EntityLayer.Concrete;
+using EntityLayer.DTOs.MessageDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace DataAccessLayer.Abstract
 {
     public interface IMessageDal : IGenericDal<Message>
     {
-        
+        public void TAddMessage(CreateMessageDto createMessageDto);
+        public List<GetMessageDto> GetMessagesByTravelId(int travelId);
     }
 }

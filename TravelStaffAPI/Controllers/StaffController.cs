@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TravelStaffAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StaffController : ControllerBase

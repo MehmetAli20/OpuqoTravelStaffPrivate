@@ -15,7 +15,7 @@ namespace EntityLayer.DTOs.TravelDTOs
         public string Stay { get; set; }
         public string Vehicle { get; set; }
         public int Id { get; set; }
-        public int StatusID { get; set; } = 1;
+        public int StatusID { get; set; } 
         public int? AdminID { get; set; }
     }
 }

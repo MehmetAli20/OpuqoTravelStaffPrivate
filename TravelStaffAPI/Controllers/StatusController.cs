@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TravelStaffAPI.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class StatusController : ControllerBase
@@ -26,7 +27,7 @@ namespace TravelStaffAPI.Controllers
             return Ok(status);
         }
 
-        [HttpGet("getbyid")]
+        [HttpGet("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
             var status = _IStatusService.TGetById(id);

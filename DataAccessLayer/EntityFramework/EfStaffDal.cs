@@ -48,7 +48,7 @@ namespace DataAccessLayer.EntityFramework
             using (var context = new Context())
             {
                 return context.Staffs
-                    .FirstOrDefault(s => s.Name == username && s.Password == password);
+                    .FirstOrDefault(s => s.UserName == username && s.Password == password);
             }
         }
         public Staff GetStaffById(int id)

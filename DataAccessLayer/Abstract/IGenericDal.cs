@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntityLayer.DTOs.TravelDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,6 @@ namespace DataAccessLayer.Abstract
 
         T GetById(int id);
         List<T> GetAll();
+       
     }
 };

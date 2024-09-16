@@ -16,94 +16,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-	<link rel="stylesheet" asp-append-version="true" href="~/css/auth.css" />
+    <link rel="stylesheet" asp-append-version="true" href="~/css/auth.css" />
 </head>
 <body>
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwgcERR63sgRYQxBd89ijLspmKLikH4Gbgjg&s" alt="OpuqoImage" style="width: auto;">
 
     <h1 style="font-size: 80; color:#04612c;">Personel Seyahat Sistemi</h1>
     <br>
-	<div class="container" id="container">
-		<div class="form-container sign-up-container">
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
             <partial name="~/Views/PartialViews/Auth/RegisterFormPartialView.cshtml" model="Model?.RegisterDto" />
-		@*<form asp-controller="Auth" asp-action="Register" method="post">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                        <label asp-for="RegisterDto.Email" class="control-label"></label>
-                        <input asp-for="RegisterDto.Email" class="form-control" />
-                        <span asp-validation-for="RegisterDto.Email" class="text-danger"></span>
+        </div>
+        <div class="form-container sign-in-container">
+            <partial name="~/Views/PartialViews/Auth/LoginFormPartialView.cshtml" model="Model?.LoginDto" />
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div style="color:red;">
+                    @ViewBag.ErrorMessage
                 </div>
+            }
+        </div>
+        @await Component.InvokeAsync("NToastNotify");
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Tekrardan Hoşgeldiniz!</h1>
+                    <p>Üyeyseniz giriş yapınız</p>
+                    <button class="ghost" id="signIn">Giriş Yap</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hesabınız Yok Mu?</h1>
+                    <p>Seyahat etmek için kişisel bilgilerini gir.</p>
+                    <button class="ghost" id="signUp">Kaydol</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Created by Opuqo</p>
+    </footer>
 
-                <div class="form-group">
-                    <label asp-for="RegisterDto.Name" class="control-label"></label>
-                    <input asp-for="RegisterDto.Name" class="form-control" />
-                    <span asp-validation-for="RegisterDto.Name" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="RegisterDto.Surname" class="control-label"></label>
-                    <input asp-for="RegisterDto.Surname" class="form-control" />
-                    <span asp-validation-for="RegisterDto.Surname" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="RegisterDto.UserName" class="control-label"></label>
-                    <input asp-for="RegisterDto.UserName" class="form-control" />
-                    <span asp-validation-for="RegisterDto.UserName" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="RegisterDto.Pw" class="control-label"></label>
-                    <input asp-for="RegisterDto.Pw" type="password" class="form-control" />
-                    <span asp-validation-for="RegisterDto.Pw" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="RegisterDto.ConfirmPw" class="control-label"></label>
-                    <input asp-for="RegisterDto.ConfirmPw" type="password" class="form-control" />
-                    <span asp-validation-for="RegisterDto.ConfirmPw" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="RegisterDto.IsAdmin" class="control-label"></label>
-                    <input asp-for="RegisterDto.IsAdmin" type="checkbox" />
-                    <span asp-validation-for="RegisterDto.IsAdmin" class="text-danger"></span>
-                </div>   
-                <button asp-controller="Auth" asp-action="Register">Kaydol</button>    
-            </form>*@
-		</div>
-		<div class="form-container sign-in-container">
-			<partial name="~/Views/PartialViews/Auth/LoginFormPartialView.cshtml" model="Model?.LoginDto" />
-			@*<form asp-controller="Auth" asp-action="Login" id="loginForm">
-				<div class="form-group">
-                    <label asp-for="LoginDto.UserName">Username</label>
-					<input asp-for="LoginDto.UserName" type="text" class="form-control" required />
-				</div>
-				<div class="form-group">
-                    <label asp-for="LoginDto.Password" type="password" >Password</label>
-                    <input asp-for="LoginDto.Password" type="password" class="form-control" />
-				</div>				
-				<button>Giriş yap</button>
-			</form>*@
-		</div>
-		<div class="overlay-container">
-			<div class="overlay">
-				<div class="overlay-panel overlay-left">
-					<h1>Tekrardan Hoşgeldiniz!</h1>
-					<p>Üyeyseniz giriş yapınız</p>
-					<button class="ghost" id="signIn">Giriş Yap</button>
-				</div>
-				<div class="overlay-panel overlay-right">
-					<h1>Hesabınız Yok Mu?</h1>
-					<p>Seyahat etmek için kişisel bilgilerini gir.</p>
-					<button class="ghost" id="signUp">Kaydol</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<footer>
-		<p>Created by Opuqo</p>
-	</footer>
-    @await Component.InvokeAsync("NToastNotify");
     <script src="~/js/auth.js"></script>
 </body>
 </html>

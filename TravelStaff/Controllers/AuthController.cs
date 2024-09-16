@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using EntityLayer.DTOs.StaffDTOs;
 using EntityLayer.DTOs.TravelDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration.UserSecrets;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 using NToastNotify;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using TravelStaff.Models;
 
@@ -28,6 +30,7 @@ namespace TravelStaff.Controllers
             this.toastNotification = toastNotification;
         }
         
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -78,46 +81,113 @@ namespace TravelStaff.Controllers
         {
             return View(authLayoutDto);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginDto)
-        {           
-            HttpClient client = httpClientFactory.CreateClient();
-            var json = JsonConvert.SerializeObject(loginDto);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync(_baseUrl + "/api/auth/login", data);
-            if (response.IsSuccessStatusCode)
+        {
+            try
             {
-                string responseData = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<LoginReturnDto>(responseData);
-                HttpContext.Session.SetString("userId", result.Id.ToString());
-                HttpContext.Session.SetString("adminId", result.AdminID.ToString());
-                
-                if (result.Success && result.IsAdmin)
+                HttpClient client = httpClientFactory.CreateClient("TravelStaff");
+                if (client == null)
                 {
-                    HttpContext.Session.SetString("isAdmin", result.IsAdmin.ToString());                   
-                    return RedirectToAction("Admin", "Auth", new { userId = result.Id }); 
-                }
-                else if (result.Success == true && result.IsAdmin == false)
-                {
-                    return RedirectToAction("Staff", "Auth", new { userId = HttpContext.Session.GetString("userId") });
-                }
-                else if (result.Success == false)
-                {
-                    return RedirectToAction("Login", "Auth");
+                    _logger.LogError("HttpClient 'TravelStaff' is null.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "HttpClient configuration issue.");
                 }
 
+                if (string.IsNullOrEmpty(_baseUrl))
+                {
+                    _logger.LogError("Base URL is null or empty.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Base URL configuration issue.");
+                }
+
+                var json = JsonConvert.SerializeObject(loginDto);
+                var data = new StringContent(json, Encoding.UTF8, "application/json");
+                if (data == null)
+                {
+                    _logger.LogError("Data content is null.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Request data issue.");
+                }
+
+                HttpResponseMessage response = await client.PostAsync(_baseUrl + "/api/auth/login", data);
+                if (response == null)
+                {
+                    _logger.LogError("Response is null.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, "API response issue.");
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<LoginReturnDto>(responseData);
+
+                    if (result == null)
+                    {
+                        _logger.LogWarning("Deserialized result is null. Response data: {ResponseData}", responseData);
+                        return StatusCode(StatusCodes.Status500InternalServerError, "Error processing login response.");
+                    }
+
+                    HttpContext.Session.SetString("AuthToken", result.Token);
+                    HttpContext.Session.SetString("userId", result.Id.ToString());
+                    HttpContext.Session.SetString("adminId", result.AdminID.ToString());
+                    HttpContext.Session.SetString("isAdmin", result.IsAdmin.ToString().ToLower());
+
+                    if (result.Success && result.IsAdmin)
+                    {
+                        return RedirectToAction("Admin", "Auth", new { userId = result.Id });
+                    }
+                    else if (result.Success && !result.IsAdmin)
+                    {
+                        return RedirectToAction("Staff", "Auth", new { userId = HttpContext.Session.GetString("userId") });
+                    }
+                    else
+                    {
+                        return RedirectToAction("Login", "Auth");
+                    }
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError("Login failed. Status code: {StatusCode}. Response content: {ResponseContent}", response.StatusCode, errorContent);
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Login failed. Please try again.");
+                }
             }
-            return Redirect(Request.Headers["Referer"].ToString());
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the login process.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred. Please try again.");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> HomePage()
+        {
+            bool isAdmin = HttpContext.Session.GetString("isAdmin") == "true";
+            ViewBag.isAdmin = isAdmin;
+            HttpClient client = httpClientFactory.CreateClient("TravelStaff");
+            
+            var token = HttpContext.Session.GetString("AuthToken");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            if (isAdmin)
+            {
+                return RedirectToAction("Admin", "Auth", new { userId = HttpContext.Session.GetString("userId") });
+            }
+            else
+            {
+                return RedirectToAction("Staff", "Auth", new { userId = HttpContext.Session.GetString("userId") });
+            }          
         }
 
         [HttpGet]
         public async Task<IActionResult> Admin(int userId)
-        {
-            bool isAdmin = HttpContext.Session.GetString("isAdmin") == "True";
+        {           
+            bool isAdmin = HttpContext.Session.GetString("isAdmin") == "true";
             ViewBag.isAdmin = isAdmin;
-            HttpClient client = httpClientFactory.CreateClient();
-            ViewBag.userId = userId;           
+            ViewBag.userId = userId;        
+            HttpClient client = httpClientFactory.CreateClient("TravelStaff");
+            var token = HttpContext.Session.GetString("AuthToken");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             HttpResponseMessage response = await client.GetAsync($"{_baseUrl}/api/staff/getstaffbyadminid/{userId}");
             if (response.IsSuccessStatusCode)
             {
@@ -132,10 +202,14 @@ namespace TravelStaff.Controllers
         [HttpGet]
         public async Task<IActionResult> Staff(int userId)
         {
+            HttpClient client = httpClientFactory.CreateClient("TravelStaff");
+            var token = HttpContext.Session.GetString("AuthToken");
             bool isAdmin = HttpContext.Session.GetString("isAdmin") == "True";
+            
             ViewBag.isAdmin = isAdmin;
             ViewBag.userId = userId;
-            HttpClient client = httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             HttpResponseMessage response = await client.GetAsync($"{_baseUrl}/api/travel/getstaffstravels/{userId}"); // -----------buradaki API ile Travel çekilecek ve Viewa verilecek -----------
             
             if (response.IsSuccessStatusCode)
@@ -149,7 +223,21 @@ namespace TravelStaff.Controllers
             _logger.LogError("API request failed with status code: {StatusCode}", response.StatusCode);
             return View(new List<GetTravelDto>()); // API çağrısı başarısız olursa boş liste döndür
         }
-        
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            // Clear session data (tokens, user information)
+            HttpContext.Session.Clear();
+
+            // Optionally show a toast notification for successful logout
+            toastNotification.AddSuccessToastMessage("Çıkış yapıldı.");
+
+            // Redirect to login page after logout
+            return RedirectToAction("Login", "Auth");
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

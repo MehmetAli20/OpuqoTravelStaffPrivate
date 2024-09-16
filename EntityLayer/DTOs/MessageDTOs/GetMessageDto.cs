@@ -10,5 +10,10 @@ namespace EntityLayer.DTOs.MessageDTOs
     {
         public int MessageID { get; set; }
         public string Content { get; set; }
+        public DateTime SendDate { get; set; }
+        public bool FromAdmin { get; set; }
+        public bool Active { get; set; }
+        public int TravelID { get; set; }
+        public CreateMessageDto? createMessageDto { get; set; }
     }
 }

@@ -1,0 +1,162 @@
+﻿@using EntityLayer.DTOs.TravelDTOs
+@model UpdateTravelDto
+
+@{
+    ViewBag.Title = "Edit Travel";
+}
+
+<h1>Edit Travel</h1>
+
+<form asp-action="EditTravel" method="post">
+    <!-- Travel bilgileri -->
+    <div class="form-group">
+        <label asp-for="TravelID" class="control-label"></label>
+        <input asp-for="TravelID" class="form-control" readonly />
+        <span asp-validation-for="TravelID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="City" class="control-label"></label>
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate" class="control-label"></label>
+        <input asp-for="StartDate" type="date" class="form-control" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EndDate" class="control-label"></label>
+        <input asp-for="EndDate" type="date" class="form-control" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Active" class="control-label"></label>
+        <input asp-for="Active" type="checkbox" />
+        <span asp-validation-for="Active" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Stay" class="control-label"></label>
+        <input asp-for="Stay" class="form-control" />
+        <span asp-validation-for="Stay" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Vehicle" class="control-label"></label>
+        <input asp-for="Vehicle" class="form-control" />
+        <span asp-validation-for="Vehicle" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CreateDate" class="control-label"></label>
+        <input asp-for="CreateDate" type="date" class="form-control" readonly />
+        <span asp-validation-for="CreateDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AdminID" class="control-label"></label>
+        <input asp-for="AdminID" class="form-control" readonly />
+        <span asp-validation-for="AdminID" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="TravelID" />
+    <input type="hidden" id="StatusID" name="StatusID" value="1" />
+
+    <!-- Status butonları -->
+    <div class="form-group">
+        <button type="button" id="btnOnayla" class="btn btn-success">Onayla</button>
+        <button type="button" id="btnReddet" class="btn btn-danger">Reddet</button>
+    </div>
+
+    <!-- Form submit butonu -->
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Gönder</button>
+    </div>
+    <a asp-action="Travels" class="btn btn-secondary">Cancel</a>
+</form>
+
+<!-- Onay modalı -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Emin misiniz?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bu işlemi gerçekleştirmek istediğinizden emin misiniz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmAction" class="btn btn-primary" data-bs-dismiss="modal">Evet</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hayır</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast bildirim -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="statusToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Durum güncellendi.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var selectedStatus = null;
+
+    // Onayla butonuna basıldığında modal açılır
+    document.getElementById('btnOnayla').addEventListener('click', function () {
+        selectedStatus = "2";  // Onaylandı
+        new bootstrap.Modal(document.getElementById('confirmationModal')).show();
+    });
+
+    // Reddet butonuna basıldığında modal açılır
+    document.getElementById('btnReddet').addEventListener('click', function () {
+        selectedStatus = "3";  // Reddedildi
+        new bootstrap.Modal(document.getElementById('confirmationModal')).show();
+    });
+
+    // Modalda "Evet" seçildiğinde status güncellenir ve toast gösterilir
+    document.getElementById('confirmAction').addEventListener('click', function () {
+        document.getElementById('StatusID').value = selectedStatus;
+
+        // Toast göster
+        var toastEl = document.getElementById('statusToast');
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    });
+</script>
+
+<style>
+    /* Butonları görsel olarak daha çekici hale getirme */
+    .btn-success, .btn-danger {
+        width: 100px;
+        height: 40px;
+        margin-right: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+    .form-group {
+        margin-top: 20px;
+    }
+
+    .toast-container {
+        z-index: 1050;
+    }
+</style>

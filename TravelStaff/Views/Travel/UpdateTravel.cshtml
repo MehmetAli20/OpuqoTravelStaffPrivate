@@ -1,8 +1,16 @@
-﻿@using EntityLayer.DTOs.TravelDTOs
-@model GetTravelDto
+﻿
+
+<h1>Update Travel</h1>
+
+@*@using EntityLayer.DTOs.TravelDTOs
+@model UpdateTravelDto
 @{
     ViewData["Title"] = "Update Travel";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var today = DateTime.Now.ToString("yyyy-MM-dd");
+    bool isAdmin = ViewBag.isAdmin != null && (bool)ViewBag.isAdmin;
+    var userId = ViewBag.userId != null ? (int)ViewBag.userId : 0;
+
 }
 
 <h1>Update Travel</h1>
@@ -22,40 +30,111 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Travel ID</td>
-                                <td><input type="text" asp-for="TravelID" name="TravelID" value="@Model.TravelID" class="form-control" readonly /></td>
+                                <td>TravelID</td>
+                                <td>
+                                       <input type="text" asp-for="TravelID" value="@Model.TravelID" class="form-control" readonly />
+
+                                </td>
                             </tr>
                             <tr>
                                 <td>City</td>
-                                <td><input type="text" asp-for="City" name="City" value="@Model.City" class="form-control" /></td>
+                                <td>
+                                    @if (isAdmin && userId != Model.Id)
+                                    {
+                                        <input type="text" asp-for="City" value="@Model.City" class="form-control" readonly />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" asp-for="City" value="@Model.City" class="form-control" required />
+                                    }
+                                </td>
                             </tr>
                             <tr>
                                 <td>Start Date</td>
-                                <td><input type="date" asp-for="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" class="form-control" /></td>
+                                <td>
+                                    @if (isAdmin && userId != Model.Id)
+                                    {
+                                        <input type="date" asp-for="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" class="form-control" readonly />
+                                    }
+                                    else
+                                    {
+                                        <input type="date" asp-for="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" class="form-control" required />
+                                    }
+                                </td>
                             </tr>
                             <tr>
                                 <td>End Date</td>
-                                <td><input type="date" asp-for="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" class="form-control" /></td>
+                                <td>
+                                    @if (isAdmin && userId != Model.Id)
+                                    {
+                                        <input type="date" asp-for="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" class="form-control" readonly />
+                                    }
+                                    else
+                                    {
+                                        <input type="date" asp-for="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" class="form-control" required />
+                                    }
+                                </td>
                             </tr>
                             <tr>
                                 <td>Description</td>
-                                <td><textarea asp-for="Description" name="Description" class="form-control">@Model.Description</textarea></td>
+                                <td>
+                                    @if (isAdmin && userId != Model.Id)
+                                    {
+                                        <textarea asp-for="Description" class="form-control" readonly>@Model.Description</textarea>
+                                    }
+                                    else
+                                    {
+                                        <textarea asp-for="Description" class="form-control" required>@Model.Description</textarea>
+                                    }
+                                </td>
                             </tr>
                             <tr>
                                 <td>Stay</td>
-                                <td><input type="text" asp-for="Stay" name="Stay" value="@Model.Stay" class="form-control" /></td>
+                                <td>
+                                    @if (isAdmin && userId != Model.Id)
+                                    {
+                                        <input type="text" asp-for="Stay" value="@Model.Stay" class="form-control" readonly />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" asp-for="Stay" value="@Model.Stay" class="form-control" required />
+                                    }
+                                </td>
                             </tr>
                             <tr>
                                 <td>Vehicle</td>
-                                <td><input type="text" asp-for="Vehicle" name="Vehicle" value="@Model.Vehicle" class="form-control" /></td>
+                                <td>
+                                    @if (isAdmin && userId != Model.Id)
+                                    {
+                                        <input type="text" asp-for="Vehicle" value="@Model.Vehicle" class="form-control" readonly />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" asp-for="Vehicle" value="@Model.Vehicle" class="form-control" required />
+                                    }
+                                </td>
                             </tr>
                             <tr>
-                                <td>Create Date</td>
-                                <td><input type="text" asp-for="CreateDate" ame="CreateDate" value="@Model.CreateDate.ToString("yyyy-MM-dd")" class="form-control" readonly /></td>
+                                <td>Status</td>
+                                <td>
+                                    @if (isAdmin && userId != Model.Id)
+                                    {
+                                        <select style="padding: 0.375rem 0.75rem; border-radius: 0.25rem; border: 1px solid #ced4da; width: 400px;">
+                                            <option value="1">Beklemede</option>
+                                            <option value="2">Onaylandi</option>
+                                            <option value="3">Reddedildi</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <textarea asp-for="StatusID" class="form-control" readonly>@Model.StatusID</textarea>
+                                    }
+                                </td>
                             </tr>
                         </tbody>
+
                     </table>
-                    <button type="submit" class="btn btn-primary">Update Travel</button>
+                    <button type="submit" asp-action="UpdateTravel" asp-controller="Travel" asp-route-travelId="@Model.TravelID" class="btn btn-primary">Seyahati Güncelle</button>
                 </form>
             </div>
         </div>
@@ -65,3 +144,4 @@ else
 {
     <p>No travel details found.</p>
 }
+*@

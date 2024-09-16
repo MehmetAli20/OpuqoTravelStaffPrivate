@@ -30,7 +30,9 @@ namespace TravelStaffAPI.Mapping.AutoMapperProfile
             CreateMap<Message, GetMessageDto>().ReverseMap();
             CreateMap<Message, CreateMessageDto>().ReverseMap();
             CreateMap<Message, UpdateMessageDto>().ReverseMap();
-
+            CreateMap<Travel, TravelMessageLayoutDto>()
+           .ForMember(dest => dest.getTravelDto, opt => opt.MapFrom(src => src))
+           .ForMember(dest => dest.getMessageDto, opt => opt.Ignore());
             //CreateMap<Staff, GetStaffDto>()
             //.ForMember(dest => dest.Travels, opt => opt.MapFrom(src => src.Travels));
         }

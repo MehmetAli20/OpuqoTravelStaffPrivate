@@ -11,7 +11,9 @@ namespace DataAccessLayer.Abstract
     public interface ITravelDal : IGenericDal<Travel>
     {
         public List<Travel> GetStaffsTravels(int id);
-
-        public void TAddTravel(Travel travelEntity);
+        public void TAddTravel(CreateTravelDto travelEntity);
+        public TravelMessageLayoutDto GetDetailsByTravelId(int travelId);
+        public List<GetTravelDto> GetPastTravelsByUserId(int userId);
+        public UpdateTravelDto GetByIdUpdate(int travelId);
     }
 }

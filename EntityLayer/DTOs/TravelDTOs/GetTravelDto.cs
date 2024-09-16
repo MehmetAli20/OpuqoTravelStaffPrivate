@@ -19,6 +19,6 @@ namespace EntityLayer.DTOs.TravelDTOs
         public DateTime CreateDate { get; set; }
         public int Id { get; set; }
         public int AdminID { get; set; }
-        
+        public int StatusID { get; set; }
     }
 }

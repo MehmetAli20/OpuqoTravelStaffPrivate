@@ -2,27 +2,40 @@
 @model List<GetTravelDto>
 
 @{
-    ViewData["Title"] = "UsersTravels";
+    ViewData["Title"] = "Seyahatlerim";
+    bool isAdmin = ViewBag.IsAdmin != null && ViewBag.IsAdmin;
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var userId = ViewBag.userId;
 }
 
-<a asp-controller="Travel" asp-action="Travels" asp-route-userId=@userId></a>
 <div class="container">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
+    
+    <!-- Link for Travels -->
+   @* <div class="mb-4">
+        <a asp-controller="Travel" asp-action="Travels" asp-route-userId="@userId" class="btn btn-primary">
+            Back to Travels
+        </a>
+    </div>*@
+
     <div class="row">
         <div class="col-md-12">
-
-            <table id="travelTable" class="table table-bordered">
-                <thead>
+            <table id="travelTable" class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark">
                     <tr>
-                        <th>Travel ID</th>
-                        <th>City</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Description</th>
-                        <th>Stay</th>
-                        <th>Vehicle</th>
-                        <th>Create Date</th>
+                        <th>Seyahat ID</th>
+                        <th>Şehir</th>
+                        <th>Başlangıç</th>
+                        <th>Bitiş</th>
+                        <th>Açıklama</th>
+                        <th>Konaklama</th>
+                        <th>Araç</th>
+                        <th>Oluşturma Tarihi</th>
+                        <th>Seyahat Durumu</th>
+                        <th>Seyahat Detayı</th>
+                        <th>Seyahat Güncelle</th>
+                        <th>Seyahat Sil</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -30,10 +43,6 @@
                     {
                         foreach (var item in Model)
                         {
-                            @*if(item==null)
-                    {
-                    continue;
-                    }*@
                             <tr>
                                 <td>@item.TravelID</td>
                                 <td>@item.City</td>
@@ -43,13 +52,50 @@
                                 <td>@item.Stay</td>
                                 <td>@item.Vehicle</td>
                                 <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                                 <td>
+                                        @if (item.StatusID == 1)
+                                        {
+                                            <span class="badge badge-warning">Beklemede</span>
+                                            
+                                        }
+										else if (item.StatusID == 2)
+										{
+											<span class="badge badge-success">Onaylandı</span>
+										}
+										else if (item.StatusID == 3)
+										{
+											<span class="badge badge-danger">Reddedildi</span>
+										}
+                                    </td>
+                                <td>
+                                    <a href="@Url.Action("TravelDetails", "Travel", new { travelID = item.TravelID })" class="btn btn-info btn-sm">
+                                        Detaylar
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-controller="Travel" asp-action="EditTravel" asp-route-travelId="@item.TravelID" class="btn btn-warning btn-sm">
+                                        Güncelle
+                                    </a>
+                                </td>
+                                <td>
+                                    <!-- Silme işlemi için form yapısı -->
+                                    <form id="deleteForm-@item.TravelID" action="/Travel/DeleteTravel" method="post" style="display: none;">
+                                        <!-- Gizli alanla DELETE isteğini belirt -->
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <input type="hidden" name="travelId" value="@item.TravelID" />
+                                    </form>
+                                    <!-- Silme butonu -->
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-travelid="@item.TravelID">
+                                        Seyahat Sil
+                                    </button>
+                                </td>
                             </tr>
                         }
                     }
                     else
                     {
                         <tr>
-                            <td colspan="8">No Travel Found.</td>
+                            <td colspan="9" class="text-center">No Travel Found.</td>
                         </tr>
                     }
                 </tbody>
@@ -57,3 +103,44 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Seyahati silmek istediğinizden emin misiniz ? </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Sildikten sonra geri alamazsınız !
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var travelIdToDelete;
+
+        // Modal açıldığında, doğru formun ID'sini ayarla
+        $('#confirmModal').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget); // Tetikleyici buton
+            travelIdToDelete = button.data('travelid'); // Seyahat ID'sini al
+        });
+
+        // Sil butonuna tıklanınca formu gönder
+        $('#confirmDeleteButton').click(function () {
+            if (travelIdToDelete) {
+                $('#deleteForm-' + travelIdToDelete).submit();
+            }
+        });
+    });
+</script>
+

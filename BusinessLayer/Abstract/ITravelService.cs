@@ -9,8 +9,11 @@ namespace BusinessLayer.Abstract
 {
     public interface ITravelService : IGenericService<Travel>
     {
-        void TAddTravel(Travel travelEntity);
+        public List<GetTravelDto> GetPastTravelsByUserId(int userId);
+        public void TAddTravel(CreateTravelDto travelEntity);
         public List<Travel> TGetStaffsTravels(int id);
+        public TravelMessageLayoutDto GetDetailsByTravelId(int travelId);
+        public UpdateTravelDto TGetByIdUpdate(int travelId);
         //public List<Travel> TGetStaffsTravelsByStaffId(int id);
 
 

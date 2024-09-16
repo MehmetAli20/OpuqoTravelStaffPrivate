@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using EntityLayer.DTOs.MessageDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,16 @@ namespace BusinessLayer.Concrete
         public Message TGetById(int id)
         {
             return _IMessageDal.GetById(id);
+        }
+
+        public List<GetMessageDto> GetMessagesByTravelId(int travelId)
+        {
+            return _IMessageDal.GetMessagesByTravelId(travelId);
+        }
+
+        public void TAddMessage(CreateMessageDto createMessageDto)
+        {
+            _IMessageDal.TAddMessage(createMessageDto);
         }
     }
 }

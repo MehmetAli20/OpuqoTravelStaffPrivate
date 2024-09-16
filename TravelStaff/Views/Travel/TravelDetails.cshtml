@@ -1,17 +1,19 @@
 ﻿@using EntityLayer.DTOs.TravelDTOs
-@model GetTravelDto
+@model TravelMessageLayoutDto
+
 @{
     ViewData["Title"] = "TravelDetails";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-	var userId = ViewBag.userId;
+    var userId = ViewBag.userId;
+    bool isAdmin = ViewBag.isAdmin;
 }
 
-<h2>Travel Details</h2>
+<h2 class="my-4">Travel Details</h2>
 
-@if (Model != null)
+@if (Model != null && Model.getTravelDto != null)
 {
-    <table class="table table-bordered">
-        <thead>
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="thead-dark">
             <tr>
                 <th>Seyahat Tablosu</th>
                 <th>Bilgiler</th>
@@ -20,49 +22,146 @@
         <tbody>
             <tr>
                 <td>Travel ID</td>
-                <td>@Model.TravelID</td>
+                <td>@Model.getTravelDto.TravelID</td>
             </tr>
             <tr>
                 <td>Başlangıç Tarihi</td>
-                <td>@Model.StartDate.ToString("dd MMM yyyy")</td>
+                <td>@Model.getTravelDto.StartDate.ToString("dd MMM yyyy")</td>
             </tr>
             <tr>
                 <td>Bitiş Tarihi</td>
-                <td>@Model.EndDate</td>
+                <td>@Model.getTravelDto.EndDate.ToString("dd MMM yyyy")</td>
             </tr>
             <tr>
                 <td>Şehir</td>
-                <td>@Model.City</td>
-            </tr>         
-             <tr>
+                <td>@Model.getTravelDto.City</td>
+            </tr>
+            <tr>
                 <td>Açıklama</td>
-                <td>@Model.Description</td>
+                <td>@Model.getTravelDto.Description</td>
             </tr>
             <tr>
                 <td>Konaklama</td>
-                <td>@Model.Stay</td>
+                <td>@Model.getTravelDto.Stay</td>
             </tr>
             <tr>
                 <td>Ulaşım</td>
-                <td>@Model.Vehicle</td>
+                <td>@Model.getTravelDto.Vehicle</td>
             </tr>
             <tr>
                 <td>Oluşturma Tarihi</td>
-                <td>@Model.CreateDate</td>
+                <td>@Model.getTravelDto.CreateDate</td>
             </tr>
-             <tr>
+            <tr>
                 <td>Admin ID</td>
-                <td>@Model.AdminID</td>
+                <td>@Model.getTravelDto.AdminID</td>
             </tr>
-
         </tbody>
     </table>
 }
 else
 {
-    <p>No travel details found.</p>
+    <div class="alert alert-warning" role="alert">
+        No travel details found.
+    </div>
 }
 
+<h2 class="my-4">Messages</h2>
+
+<div id="messageList" class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Content</th>
+                <th>Send Date</th>
+                <th>From</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Messages will be dynamically loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Message sending form -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">Yeni Bir Mesaj Gönder</h5>
+        <form id="messageForm" method="post">
+            <div class="form-group">
+                <label for="Content">Yeni Mesaj</label>
+                <textarea class="form-control" id="Content" name="Content" rows="3" placeholder="Mesajınızı buraya yazınız..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    </div>
+</div>
+
+<!-- Success and error messages -->
+<p id="messageSuccess" class="alert alert-success mt-3" style="display:none; padding: 5px; font-size: 14px; max-width: 300px;">Mesaj başarıyla gönderildi!</p>
+<p id="messageError" class="alert alert-danger mt-3" style="display:none;">Mesaj gönderilemedi.</p>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        loadMessages();
+        setInterval(loadMessages, 5000);
+
+        $("#messageForm").submit(function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var formData = {
+                Content: $("#Content").val(),
+                FromAdmin: @userId == @Model.getTravelDto.AdminID ? true : false,
+                TravelID: @Model.getTravelDto.TravelID
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:7143/api/message/create/",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                success: function () {
+                    $("#messageSuccess").show();
+                    $("#messageError").hide();
+                    $("#Content").val('');
+                    loadMessages();
+                },
+                error: function () {
+                    $("#messageError").show();
+                    $("#messageSuccess").hide();
+                }
+            });
+        });
+
+        function loadMessages() {
+            $.ajax({
+                type: "GET",
+                url: "https://localhost:7143/api/message/getbytravelid/" + @Model.getTravelDto.TravelID,
+                contentType: "application/json",
+                success: function (data) {
+                    var messageList = $("#messageList tbody");
+                    messageList.empty();
+                    if (data.length > 0) {
+                        data.forEach(function (message) {
+                            var messageClass = message.fromAdmin ? "bg-light text-secondary" : "bg-white";
+                            var messageDate = new Date(message.sendDate).toLocaleString();
+                            var messageItem = "<tr class='" + messageClass + "'><td>" + message.content + "</td><td>" + messageDate + "</td><td>" + (message.fromAdmin ? "Admin" : "User") + "</td></tr>";
+                            messageList.append(messageItem);
+                        });
+                    } else {
+                        messageList.append("<tr><td colspan='3' class='text-center'>No messages found.</td></tr>");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error occurred: " + error);
+                    $("#messageList tbody").append("<tr><td colspan='3' class='text-center'>Error loading messages.</td></tr>");
+                }
+            });
+        }
+    });
+</script>
+
 <form asp-action="BackToPreviousPage" method="post">
-    <button type="submit" class="btn btn-primary">Geri Dön</button>
+    <button type="submit" class="btn btn-secondary">Geri Dön</button>
 </form>

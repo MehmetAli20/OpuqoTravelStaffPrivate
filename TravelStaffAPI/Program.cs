@@ -1,21 +1,68 @@
-using Autofac;
-using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
+using Autofac;
 using BusinessLayer.DependencyResolvers.Autofac;
 using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using System.Text.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext ve Identity konfigürasyonlarý
 builder.Services.AddDbContext<Context>();
 builder.Services.AddIdentity<Staff, Role<int>>()
-    .AddEntityFrameworkStores<Context>();
+    .AddEntityFrameworkStores<Context>()
+    .AddDefaultTokenProviders();
 
-// MVC ve Razor ayarlarý
+// JWT Configuration
+var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+if (string.IsNullOrEmpty(jwtKey) || string.IsNullOrEmpty(jwtIssuer) || string.IsNullOrEmpty(jwtAudience))
+{
+    throw new InvalidOperationException("JWT settings are not configured properly.");
+}
+
+var key = Encoding.ASCII.GetBytes(jwtKey);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        // Token'ýn hangi issuer tarafýndan verildiðini doðrula
+        ValidateIssuer = true,
+        ValidIssuer = jwtIssuer,
+
+        // Token'ýn hangi audience için geçerli olduðunu doðrula
+        ValidateAudience = true,
+        ValidAudience = jwtAudience,
+
+        // Token'ýn geçerlilik süresini kontrol et
+        ValidateLifetime = true,
+
+        // Token'ýn imzasýný doðrula
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+
+        // Token'ýn geçerliliði ile ilgili hata mesajlarý
+        ClockSkew = TimeSpan.Zero // Token geçerlilik süresi doðrulama hatalarýna tolerans
+    };
+});
+
+
+
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddMvc(config =>
@@ -23,36 +70,22 @@ builder.Services.AddMvc(config =>
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
     config.Filters.Add(new AuthorizeFilter(policy));
 });
-builder.Services.AddMvc();
 
-// CORS ayarlarý
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("https://localhost:7055") // Ýzin verilen kaynak
+            builder.WithOrigins("https://localhost:7055") // Adjust to your actual client URL
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         });
 });
 
-// JSON seçenekleri
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-});
-
-// AutoMapper ayarlarý
 builder.Services.AddAutoMapper(typeof(Program));
-
-// Swagger/OpenAPI ayarlarý
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Session konfigürasyonu
-builder.Services.AddDistributedMemoryCache(); // Session veri saklama için gerekli
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -60,10 +93,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// HttpContextAccessor ayarlarý
-builder.Services.AddHttpContextAccessor(); // HttpContext eriþimi için gerekli
-
-// Autofac ayarlarý
+builder.Services.AddHttpContextAccessor();
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
@@ -72,9 +102,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 
 var app = builder.Build();
 
-// Middleware ve pipeline konfigürasyonu
 app.UseCors("AllowSpecificOrigins");
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -82,9 +110,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
+
+app.UseSession();
+app.UseAuthentication(); // JWT middleware
 app.UseAuthorization();
-app.UseSession(); // Session middleware
+
 app.MapControllers();
 
 app.Run();

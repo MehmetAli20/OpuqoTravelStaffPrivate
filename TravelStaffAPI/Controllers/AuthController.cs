@@ -5,8 +5,11 @@ using EntityLayer.DTOs.StaffDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EntityLayer.Concrete;
-using System.Xml.Linq;
 using System;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace TravelStaffAPI.Controllers
 {
@@ -18,50 +21,120 @@ namespace TravelStaffAPI.Controllers
         private readonly IStaffService _staffService;
         private readonly UserManager<Staff> _userManager;
         private readonly SignInManager<Staff> _signInManager;
+        private readonly ILogger<AuthController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(IStaffService staffService, UserManager<Staff> userManager, SignInManager<Staff> signInManager)
+        public AuthController(IStaffService staffService, UserManager<Staff> userManager, SignInManager<Staff> signInManager, ILogger<AuthController> logger, IConfiguration configuration)
         {
             _staffService = staffService;
             _userManager = userManager;
             _signInManager = signInManager;
+            _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost("login")]
-        public async Task<LoginReturnDto> Login([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            if (!ModelState.IsValid)
+            if (loginDto == null)
             {
-                return(new LoginReturnDto { Success = false, Message = "Invalid login credentials." });
+                _logger.LogError("LoginDto is null.");
+                return BadRequest(new { Message = "Invalid login request." });
             }
 
-            // Find the user by their username
-            var user = await _userManager.FindByNameAsync(loginDto.UserName);
+            try
+            {
+                var user = await _userManager.FindByNameAsync(loginDto.UserName);
+                if (user == null)
+                {
+                    _logger.LogWarning("User not found: {UserName}", loginDto.UserName);
+                    return Unauthorized(new { Message = "Invalid username or password." });
+                }
+
+                var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, lockoutOnFailure: false);
+                if (!result.Succeeded)
+                {
+                    _logger.LogWarning("Invalid password for user: {UserName}", loginDto.UserName);
+                    return Unauthorized(new { Message = "Invalid username or password." });
+                }
+
+                // Generate JWT token
+                var token = GenerateJwtToken(user);
+
+                return Ok(new LoginReturnDto
+                {
+                    //RedirectUrl = .... 
+                    Message = "Token Generated Succesfully",
+                    Success = true,
+                    Token = token,
+                    Id = user.Id,
+                    AdminID = user.AdminID ?? 44,
+                    IsAdmin = user.IsAdmin
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during the login process.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An unexpected error occurred. Please try again." });
+            }
+        }
+
+        private string GenerateJwtToken(Staff user)
+        {
+
             if (user == null)
             {
-                return(new LoginReturnDto { Success = false, Message = "Invalid login credentials." });
+                throw new ArgumentNullException(nameof(user));
             }
 
-            // Validate the password
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, lockoutOnFailure: false);
-            if (result.Succeeded)
+            if (user.UserName != null)
             {
-                // Sign the user in
-                await _signInManager.SignInAsync(user, isPersistent: false);
-
-                var redirectUrl = user.IsAdmin ? "/Admin" : "/Staff";
-                // Return a success response
-                return new LoginReturnDto
-                {
-                    Success = true,
-                    RedirectUrl = redirectUrl,
-                    Id = user.Id,
-                    IsAdmin = user.IsAdmin,
-                    AdminID = user.AdminID.Value,
-                }; 
+                _logger.LogInformation("User: {UserName} is logging in.", user.UserName);
+                _logger.LogInformation("User: {Name} is logging in.", user.Name);
             }
-            // If the login fails, return an unauthorized response
-            return (new LoginReturnDto { Success = false, Message = "Invalid login credentials." });
+
+            if (user.Id == null || user.Id == 0)
+            {
+                throw new ArgumentNullException(nameof(user.Id));
+            }
+
+            if (user.IsAdmin == null)
+            {
+                throw new ArgumentNullException(nameof(user.IsAdmin));
+            }
+
+            if (user.AdminID == null)
+            {
+                throw new ArgumentNullException(nameof(user.AdminID));
+            }
+            // Check if _configuration is null
+            if (_configuration == null)
+            {
+                throw new InvalidOperationException("Configuration is not set.");
+            }
+            var claims = new[]
+            {
+        new Claim(JwtRegisteredClaimNames.Sub, user.UserName ?? ""), // Null kontrolü
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim("userId", user.Id.ToString() ?? "0"), // Null kontrolü
+        new Claim("adminId", user.AdminID?.ToString() ?? "0"), // Null kontrolü
+        new Claim("isAdmin", user.IsAdmin.ToString().ToLower()) // Genelde bool değer, null olmayabilir
+    };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.UtcNow.AddMinutes(30),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
@@ -71,11 +144,11 @@ namespace TravelStaffAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            // Yeni bir Staff nesnesi oluştur
+
             try
             {
                 // Kullanıcıyı oluştur
-                var result = await _userManager.CreateAsync(new()
+                var result = await _userManager.CreateAsync(new Staff
                 {
                     UserName = registerDto.UserName,
                     Name = registerDto.Name,
@@ -84,7 +157,6 @@ namespace TravelStaffAPI.Controllers
                     Active = true,
                     IsAdmin = registerDto.IsAdmin,
                     AdminID = 44,
-                    Password="test"
                 }, registerDto.Pw);
 
                 // result nesnesinin null olup olmadığını kontrol et
@@ -101,17 +173,11 @@ namespace TravelStaffAPI.Controllers
             }
             catch (Exception ex)
             {
-
-                var test = ex.Message;
+                // Hataları işle
+                return StatusCode(StatusCodes.Status500InternalServerError, new RegisterReturnDto { Success = false, ErrorMessage = ex.Message });
             }
 
-            
-                //// Hataları işle
-                //var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                return BadRequest(new RegisterReturnDto { Success = false, ErrorMessage = "" });
-          
-
+            return BadRequest(new RegisterReturnDto { Success = false, ErrorMessage = "Failed to register user." });
         }
-
     }
 }

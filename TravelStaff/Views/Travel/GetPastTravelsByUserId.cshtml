@@ -1,0 +1,98 @@
+﻿@using EntityLayer.DTOs.TravelDTOs
+@model List<GetTravelDto>
+@{
+    ViewData["Title"] = "GetPastTravelsByUserId";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	var userId = ViewBag.userId;
+}
+
+<h1>Gecmis Seyahatlerim</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="travelTable" class="table table-striped table-bordered table-hover">
+                <thead class="table-head-bg-primary thead-dark">
+                    <tr>
+                        <th>Travel ID</th>
+                        <th>City</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Description</th>
+                        <th>Stay</th>
+                        <th>Vehicle</th>
+                        <th>Create Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.TravelID</td>
+                                <td>@item.City</td>
+                                <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
+                                <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
+                                <td>@item.Description</td>
+                                <td>@item.Stay</td>
+                                <td>@item.Vehicle</td>
+                                <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="11" class="text-center">No Travel Found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal HTML -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Seyahati silmek istediğinizden emin misiniz ? </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Sildikten sonra geri alamazsınız ! 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var travelIdToDelete;
+
+        // Modal açıldığında, doğru formun ID'sini ayarla
+        $('#confirmModal').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget); // Tetikleyici buton
+            travelIdToDelete = button.data('travelid'); // Seyahat ID'sini al
+        });
+
+        // Sil butonuna tıklanınca formu gönder
+        $('#confirmDeleteButton').click(function () {
+            if (travelIdToDelete) {
+                $('#deleteForm-' + travelIdToDelete).submit();
+            }
+        });
+    });
+</script>

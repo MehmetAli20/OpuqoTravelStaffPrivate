@@ -1,0 +1,78 @@
+﻿@*@using EntityLayer.DTOs.MessageDTOs
+@model List<GetMessageDto>
+@{
+    var travelId = ViewBag.travelId;
+}
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Content</th>
+                <th>Send Date</th>
+                <th>From Admin</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var message in Model)
+            {
+                <tr>
+                    <td>@message.Content</td>
+                    <td>@message.SendDate.ToString("dd MMM yyyy HH:mm")</td>
+                    <td>@(message.FromAdmin ? "Admin" : "User")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No messages found for this travel.</p>
+}
+*@
+<!-- Razor travelId değişkenini gizli bir inputa yerleştiriyoruz -->
+
+@*<script>
+    function loadMessages() {
+        var travelId = $("#travelId").val(); // travelId'yi HTML'deki hidden input'tan alıyoruz
+
+        $.ajax({
+            type: "GET",
+            url: "https://localhost:7143/api/message/getbytravelid/" + travelId, // Seyahat ile ilgili mesajları getir
+            contentType: "application/json",
+            success: function (data) {
+                var messageList = $("#messageList");
+                messageList.empty(); // Önceki mesajları temizle
+
+                if (data.length > 0) {
+                    data.forEach(function (message) {
+                        var fromWho = message.FromAdmin ? "Admin" : (message.UserName || "User");
+
+                        var messageDate = new Date(message.SendDate).toLocaleString();
+
+                        var messageItem = "<p><strong>" + fromWho + "</strong>: " + message.Content + " (" + messageDate + ")</p>";
+                        messageList.append(messageItem);
+                    });
+                } else {
+                    messageList.append("<p>No messages found.</p>");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("Error occurred: " + error); // Hata detaylarını konsola yazdır
+                $("#messageList").append("<p>Error loading messages.</p>");
+            }
+        });
+    }
+
+
+    // Sayfa yüklendiğinde mesajları getir
+    $(document).ready(function () {
+        loadMessages();
+
+        // Mesajları her 5 saniyede bir kontrol et (yakın gerçek zamanlı)
+        setInterval(loadMessages, 5000);
+    });
+</script>*@
+
+<!-- Geri gitmek için buton -->
+<a href="javascript:history.back()" class="btn btn-secondary">Back</a>

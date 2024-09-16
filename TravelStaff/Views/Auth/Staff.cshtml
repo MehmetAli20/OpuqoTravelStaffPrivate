@@ -9,18 +9,21 @@
 <h2>Bana Ait Seyahatler</h2>
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <table id="travelTable" class="table table-bordered">
-                <thead>
+        <div class="col-md-12 table-responsive">
+            <table id="travelTable" class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
                     <tr>
-                        <th>Travel ID</th>
-                        <th>City</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Description</th>
-                        <th>Stay</th>
-                        <th>Vehicle</th>
-                        <th>Create Date</th>
+                        <th>Seyahat ID</th>
+                        <th>Şehir</th>
+                        <th>Başlangıç</th>
+                        <th>Bitiş</th>
+                        <th>Açıklama</th>
+                        <th>Konaklama</th>
+                        <th>Araç</th>
+                        <th>Oluşturma Tarihi</th>
+                        <th>Seyahat Detayı</th>
+                        <th>Seyahat Güncelle</th>
+                        <th>Seyahat Sil</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,6 +40,22 @@
                                 <td>@item.Stay</td>
                                 <td>@item.Vehicle</td>
                                 <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <a href="@Url.Action("TravelDetails", "Travel", new { travelID = item.TravelID })" class="btn btn-info">
+										Detaylar
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-controller="Travel" asp-action="UpdateTravel" asp-route-travelId="@item.TravelID" class="btn btn-warning btn-sm">
+                                        Güncelle
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-controller="Travel" asp-action="DeleteTravel" asp-route-travelId="@item.TravelID" class="btn btn-danger btn-sm">
+										Seyahat Sil
+                                    </a>
+                                </td>
+
                             </tr>
                         }
                     }

@@ -6,67 +6,58 @@
     var userId = ViewBag.userId;
 }
 
-<h1>Add Travel</h1>
+<h1 class="mb-4" style="border:thick;">Seyahat Olustur</h1>
 
-<form asp-action="AddTravel" asp-route-userId=@userId method="post">
-    <h4>YENİ SEYAHAT <span>OLUŞTUR</span></h4>
-    <div class="form-row">
-        <div class="form-group col-lg-4">
-            <label asp-for="City">Şehir Adı</label>
-            <input asp-for="City" class="form-control" id="txtcity" placeholder="">
-        </div>
-        <div class="form-group col-lg-4">
-            <label asp-for="StartDate">Başlangıç Tarihi</label>
-            <div class="input-group date">
-                <input asp-for="StartDate" type="date" id="txtstartDate" class="form-control">
-                <span class="input-group-addon date_icon">
-                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                </span>
+<form asp-action="AddTravel" asp-controller="Travel" asp-route-userId="@userId" method="post">
+    <div class="container mt-5">
+        <h4 class="mb-4 text-center fw-bold text-primary">Yeni Seyahat Oluştur</h4>
+        <div class="row g-4">
+            <!-- Added gap between rows -->
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="City" class="form-label fw-bold">Şehir Adı</label>
+                <input asp-for="City" class="form-control" id="txtcity" placeholder="Şehir adı girin" style="border-radius: 0.375rem; border-color: #ced4da;">
+            </div>
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="StartDate" class="form-label fw-bold">Başlangıç Tarihi</label>
+                <input asp-for="StartDate" type="date" id="txtstartDate" class="form-control" style="border-radius: 0.375rem; border-color: #ced4da;">
+            </div>
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="EndDate" class="form-label fw-bold">Bitiş Tarihi</label>
+                <input asp-for="EndDate" type="date" id="txtendDate" class="form-control" style="border-radius: 0.375rem; border-color: #ced4da;">
+            </div>
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="Description" class="form-label fw-bold">Açıklama</label>
+                <input asp-for="Description" type="text" class="form-control" id="txtdescription" placeholder="Açıklama girin" style="border-radius: 0.375rem; border-color: #ced4da;">
+            </div>
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="Stay" class="form-label fw-bold">Konaklama</label>
+                <select asp-for="Stay" class="form-select" id="txtstay" style="padding: 0.375rem 0.75rem; border-radius: 0.25rem; border: 1px solid #ced4da; width: 400px; ">
+                    <option value="" disabled selected>Seçiniz</option>
+                    <option value="Otel">Otel</option>
+                    <option value="Kiralık daire">Kiralık daire</option>
+                    <option value="Hostel">Hostel</option>
+                    <option value="Pansiyon">Pansiyon</option>
+                    <option value="Tatil köyü">Tatil köyü</option>
+                    <option value="Diger">Diger</option>
+                </select>
+            </div>
+            <div class="form-group col-md-12 col-lg-6">
+                <label asp-for="Vehicle" class="form-label fw-bold">Araç</label>
+                <select asp-for="Vehicle" class="form-select" id="txtvehicle" style="padding: 0.375rem 0.75rem; border-radius: 0.25rem; border: 1px solid #ced4da; width: 400px;">
+                    <option value="" disabled selected>Seçiniz</option>
+                    <option value="Uçak">Uçak</option>
+                    <option value="Otobüs">Otobüs</option>
+                    <option value="Özel araç">Özel araç</option>
+                    <option value="Servis">Servis</option>
+                    <option value="Tren">Tren</option>
+                    <option value="Diger">Diger</option>
+                </select>
             </div>
         </div>
-        <div class="form-group col-lg-4">
-            <label asp-for="EndDate">Bitiş Tarihi</label>
-            <div class="input-group date">
-                <input asp-for="EndDate" type="date" id="txtendDate" class="form-control">
-                <span class="input-group-addon date_icon">
-                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                </span>
-            </div>
+        <div class="d-flex justify-content-center mt-4">
+            <button type="submit" id="createtravel" class="btn btn-primary w-100 w-md-50" style="border-radius: 0.375rem; padding: 0.75rem 1.25rem; font-size: 1.125rem;">Oluştur</button>
         </div>
-        <div class="form-group col-lg-4">
-            <label asp-for="Description">Açıklama</label>
-            <input asp-for="Description" type="text" class="form-control" id="txtdescription" placeholder="">
-        </div>
-        <div class="form-group col-lg-4">
-            <label asp-for="Stay">Konaklama</label>
-            <select asp-for="Stay" class="form-control wide" id="txtstay">
-                <option value="Otel">Otel</option>
-                <option value="Kiralık daire">Kiralık daire</option>
-                <option value="Hostel">Hostel</option>
-                <option value="Pansiyon">Pansiyon</option>
-                <option value="Tatil köyü">Tatil köyü</option>
-            </select>
-        </div>
-        <div class="form-group col-lg-4">
-            <label asp-for="Vehicle">Araç</label>
-            <select asp-for="Vehicle" class="form-control wide" id="txtvehicle">
-                <option value="Uçak">Uçak</option>
-                <option value="Otobüs">Otobüs</option>
-                <option value="Özel araç">Özel araç</option>
-                <option value="Servis">Servis</option>
-                <option value="Tren">Tren</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-row">
-        <!-- Removed StaffID and AdminID fields -->
-        <div class="form-group col-lg-4">
-            <label asp-for="StatusID">Status ID</label>
-            <input asp-for="StatusID" type="number" class="form-control" id="txtstatusid" placeholder="">
-        </div>
-    </div>
-    <div class="btn-box">
-        <button type="submit" id="createtravel" class="btn btn-outline-primary">Oluştur</button>
-        <br />
     </div>
 </form>
+
+

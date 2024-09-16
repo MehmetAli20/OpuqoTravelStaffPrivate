@@ -21,15 +21,24 @@ namespace BusinessLayer.Concrete
             _ITravelDal = iTravelDal;
         }
 
-        
+        public TravelMessageLayoutDto GetDetailsByTravelId(int travelId)
+        {
+           return  _ITravelDal.GetDetailsByTravelId(travelId);
+        }
+
+        public List<GetTravelDto> GetPastTravelsByUserId(int userId)
+        {
+            return _ITravelDal.GetPastTravelsByUserId(userId);
+        }
+
         public void TAdd(Travel t)
         {
             _ITravelDal.Insert(t);     
         }
 
-        public void TAddTravel(Travel travelEntity)
+        public void TAddTravel(CreateTravelDto travelEntity)
         {
-            _ITravelDal.Insert(travelEntity);
+            _ITravelDal.TAddTravel(travelEntity);
         }
 
         public void TDelete(Travel t)
@@ -46,11 +55,17 @@ namespace BusinessLayer.Concrete
         {
             return _ITravelDal.GetById(id);
         }
-        
+
+        public UpdateTravelDto TGetByIdUpdate(int travelId)
+        {
+            return _ITravelDal.GetByIdUpdate(travelId);
+        }
+
         public List<Travel> TGetStaffsTravels(int id)
         {
             return _ITravelDal.GetStaffsTravels(id);
         }
+        
 
         public void TUpdate(Travel t)
         {

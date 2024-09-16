@@ -1,0 +1,39 @@
+﻿@using EntityLayer.DTOs.MessageDTOs
+@model List<GetMessageDto>
+
+@{
+    ViewData["Title"] = "GetMessageByTravel";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Messages for Travel</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Content</th>
+                <th>Send Date</th>
+                <th>From Admin</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var message in Model)
+            {
+                <tr>
+                    <td>@message.Content</td>
+                    <td>@message.SendDate.ToString("dd MMM yyyy HH:mm")</td>
+                    <td>@(message.FromAdmin ? "Admin" : "User")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No messages found for this travel.</p>
+}
+
+<!-- Add a back button or any other navigation elements if needed -->
+<a href="javascript:history.back()" class="btn btn-secondary">Geri Dön</a>

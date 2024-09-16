@@ -4,52 +4,155 @@
 @{
     ViewData["Title"] = "Tüm Seyahat Bilgileri";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-  
+    var userId = ViewBag.userId;
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-4">@ViewData["Title"]</h2>
+
 <div class="container">
     <div class="row">
-        <div class="col-md-12">         
-            <table id="travelTable" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Travel ID</th>
-                        <th>City</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Description</th>
-                        <th>Stay</th>
-                        <th>Vehicle</th>
-                        <th>Create Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Any())
-                    {
-                        foreach (var item in Model)
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="travelTable" class="table table-striped table-bordered table-hover table-sm shadow-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Travel ID</th>
+                            <th>City</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Description</th>
+                            <th>Stay</th>
+                            <th>Vehicle</th>
+                            <th>Create Date</th>
+                            <th>Status</th>
+                            <th>Detay</th>
+                            <th>Güncelle</th>
+                            <th>Sil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.TravelID</td>
+                                    <td>@item.City</td>
+                                    <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
+                                    <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.Stay</td>
+                                    <td>@item.Vehicle</td>
+                                    <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                                    <td>
+                                        @if (item.StatusID == 1)
+                                        {
+                                            <span class="badge badge-warning">Beklemede</span>
+                                            
+                                        }
+										else if (item.StatusID == 2)
+										{
+											<span class="badge badge-success">Onaylandı</span>
+										}
+										else if (item.StatusID == 3)
+										{
+											<span class="badge badge-danger">Reddedildi</span>
+										}
+                                    </td>
+                                    <td>
+                                        <a asp-controller="Travel" asp-action="TravelDetails" asp-route-travelId="@item.TravelID" asp-route-adminId="@item.AdminID" class="btn btn-info btn-sm">
+                                            <i class="fas fa-info-circle"></i> Detay
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a asp-controller="Travel" asp-action="EditTravel" asp-route-travelId="@item.TravelID" asp-route-userId="@item.Id" class="btn text-white btn-sm" style="background-color:darkcyan">
+                                            <i class="fas fa-edit"></i> Güncelle
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-travelid="@item.TravelID">
+                                            <i class="fas fa-trash-alt"></i> Sil
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>@item.TravelID</td>
-                                <td>@item.City</td>
-                                <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
-                                <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
-                                <td>@item.Description</td>
-                                <td>@item.Stay</td>
-                                <td>@item.Vehicle</td>
-                                <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
-                                <td><a asp-controller="Travel" asp-action="TravelDetails" asp-route-travelId="@item.TravelID">View Travel</a></td>
+                                <td colspan="11" class="text-center text-muted">No Travel Found.</td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="8">No Travel Found.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+<form id="deleteForm" asp-controller="Travel" asp-action="DeleteTravel" method="post" style="display:none;">
+    <input type="hidden" name="travelId" id="deleteTravelId" />
+</form>
+<!-- Modal HTML -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Seyahati Silmek İstediğinizden Emin Misiniz?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bu işlemi geri alamazsınız!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var travelIdToDelete;
+
+        // Modal açıldığında, travelId'yi al ve form'a aktar
+        $('#confirmModal').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget); // Silme butonunu al
+            travelIdToDelete = button.data('travelid'); // travelId'yi al
+
+            // Formdaki hidden input'a travelId'yi aktar
+            $('#deleteTravelId').val(travelIdToDelete);
+        });
+
+        // Modal'daki "Sil" butonuna tıklayınca formu gönder
+        $('#confirmDeleteButton').click(function () {
+            $('#deleteForm').submit(); // Formu submit et
+        });
+    });
+
+
+</script>
+<style>
+    .modal-header {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .modal-body {
+        font-size: 1.1rem;
+    }
+
+    .modal-footer .btn-danger {
+        background-color: #dc3545;
+    }
+
+</style>

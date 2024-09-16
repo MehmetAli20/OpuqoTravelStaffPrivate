@@ -2,6 +2,7 @@
 using BusinessLayer.Abstract;
 using EntityLayer.Concrete;
 using EntityLayer.DTOs.MessageDTOs;
+using EntityLayer.DTOs.TravelDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,29 +30,52 @@ namespace TravelStaffAPI.Controllers
             return Ok(messages);
         }
 
-        [HttpGet("getbyid/{id}")]
-        public IActionResult GetMessageById(int id)
+        //TRAVELID KISMI UI TARAFINDAN ALINACAK VE BURADA ATANACAK BELKİ İLERİDE ORTAK SESSİON KURULUP JWT İLE DE YAPILABİLİR ŞİMDİLİK BU ŞEKİLDE YAPILDI
+        [HttpGet("getbytravelid/{travelId}")]
+        public IActionResult GetMessagesByTravelId(int travelId)
         {
-            var message = _mapper.Map<GetMessageDto>(_IMessageService.TGetById(id));
+            var messages = _mapper.Map<List<GetMessageDto>>(_IMessageService.GetMessagesByTravelId(travelId));
+            return Ok(messages);
+        }
+
+        [HttpGet("getbyid/{id}")]
+        public IActionResult GetMessageById(int travelId)
+        {
+            var message = _mapper.Map<GetMessageDto>(_IMessageService.TGetById(travelId));
             return Ok(message);
         }
 
+        //[HttpPost("create")]
+        //public IActionResult CreateMessage([FromBody] TravelMessageLayoutDto travelMessageLayoutDto) //TravelLayoutMessageDto ile ilgili travel'i alıp ef'de setleyebilirm ama daha iyi bir çözüm bulup onu yapacağım.
+        //{
+        //    if (ModelState.IsValid)
+        //    {       
+        //        _IMessageService.TAddMessage(travelMessageLayoutDto.createMessageDto);
+        //        return Ok();
+        //    }
+        //    return BadRequest("Invalid Data");
+        //}
+
         [HttpPost("create")]
-        public IActionResult CreateMessage([FromBody] CreateMessageDto createMessageDto)
+        public IActionResult CreateMessage(CreateMessageDto createMessageDto)
         {
+            var info = createMessageDto.FromAdmin;
             if (ModelState.IsValid)
             {
-                _IMessageService.TAdd(new Message
+                // Admin olup olmadığını gelen FromAdmin bilgisinden anlayarak mesajı ekleyelim
+                var message = new CreateMessageDto
                 {
-                    TravelID = 12,
+                    TravelID = createMessageDto.TravelID,
                     Content = createMessageDto.Content,
                     SendDate = DateTime.Now,
-                    FromAdmin = true,
+                    FromAdmin = createMessageDto.FromAdmin, // Burada FromAdmin'i kullanıyoruz
                     Active = true
-                });
+                };
+
+                _IMessageService.TAddMessage(message);
                 return Ok();
-            }           
-            return Ok();
+            }
+            return BadRequest("Invalid Data");
         }
 
         [HttpPut("updatebyid/{id}")]
