@@ -21,6 +21,7 @@
                         <th>Konaklama</th>
                         <th>Araç</th>
                         <th>Oluşturma Tarihi</th>
+                        <th>Seyahat Durumu</th>
                         <th>Seyahat Detayı</th>
                         <th>Seyahat Güncelle</th>
                         <th>Seyahat Sil</th>
@@ -40,6 +41,21 @@
                                 <td>@item.Stay</td>
                                 <td>@item.Vehicle</td>
                                 <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @if (item.StatusID == 1)
+                                    {
+                                        <span class="badge badge-warning">Beklemede</span>
+
+                                    }
+                                    else if (item.StatusID == 2)
+                                    {
+                                        <span class="badge badge-success">Onaylandı</span>
+                                    }
+                                    else if (item.StatusID == 3)
+                                    {
+                                        <span class="badge badge-danger">Reddedildi</span>
+                                    }
+                                </td>
                                 <td>
                                     <a href="@Url.Action("TravelDetails", "Travel", new { travelID = item.TravelID })" class="btn btn-info">
 										Detaylar

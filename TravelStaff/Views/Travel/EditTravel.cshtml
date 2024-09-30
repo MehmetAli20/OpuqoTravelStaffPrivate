@@ -126,14 +126,17 @@
             </div>
         </div>
 
-        <div class="row mb-4">
+        @if(Model.AdminID == userId){
+            <div class="row mb-4">
             <div class="col">
                 <button type="button" id="btnOnayla" class="btn btn-success me-2" name="Status" value="2">Onayla</button>
                 <button type="button" id="btnReddet" class="btn btn-danger me-2" name="Status" value="3">Reddet</button>
-                <button type="submit" class="btn btn-primary">Gönder</button>
-                <a asp-action="Travels" class="btn btn-secondary">Cancel</a>
+               
             </div>
         </div>
+        }
+         <button type="submit" class="btn btn-primary">Gönder</button>
+         <a asp-action="Travels" class="btn btn-secondary">Cancel</a>
     </div>
 </form>
 
@@ -170,7 +173,7 @@
 
 @section scripts {
     <script>
-        var selectedStatus = null;
+        var selectedStatus = 1;
 
         // Onayla butonuna basıldığında modal açılır
         document.getElementById('btnOnayla').addEventListener('click', function () {
