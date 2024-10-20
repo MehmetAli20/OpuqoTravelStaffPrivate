@@ -68,7 +68,7 @@ builder.Services.AddHttpClient("TravelStaff", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7143");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
-    client.Timeout = TimeSpan.FromMinutes(20);
+    client.Timeout = TimeSpan.FromMinutes(30);
 });
 
 // Configure NToastNotify for toastr notifications

@@ -144,7 +144,6 @@ namespace TravelStaffAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
                 // Kullanıcıyı oluştur
@@ -157,8 +156,12 @@ namespace TravelStaffAPI.Controllers
                     Active = true,
                     IsAdmin = registerDto.IsAdmin,
                     AdminID = 44,
-                }, registerDto.Pw);
-
+                }, registerDto.Password);
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors);
+                    // Hataları inceleyin
+                }
                 // result nesnesinin null olup olmadığını kontrol et
                 if (result == null)
                 {

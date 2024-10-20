@@ -23,7 +23,7 @@ namespace BusinessLayer.Concrete
 
         public Staff Authenticate(string UserName, string password)
         {
-            return _IStaffDal.GetAll().FirstOrDefault(s => s.UserName == UserName && s.Password == password);
+            return _IStaffDal.GetAll().FirstOrDefault(s => s.UserName == UserName );
         }
 
         public List<GetStaffDto> GetStaffByAdminId(int adminId)

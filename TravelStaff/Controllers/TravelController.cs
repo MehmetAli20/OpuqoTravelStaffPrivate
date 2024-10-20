@@ -247,7 +247,7 @@ namespace TravelStaff.Controllers
 
             if (userId == null)
             {
-                return RedirectToAction("Login", "Auth"); // Kullanıcı ID'si yoksa giriş sayfasına yönlendir
+                return RedirectToAction("Login", "Auth"); 
             }
 
             var json = JsonConvert.SerializeObject(updateTravelDto);
@@ -257,7 +257,7 @@ namespace TravelStaff.Controllers
             var token = HttpContext.Session.GetString("AuthToken");
             if (string.IsNullOrEmpty(token))
             {
-                return RedirectToAction("Login", "Auth"); // Token yoksa giriş sayfasına yönlendir
+                return RedirectToAction("Login", "Auth"); 
             }
 
             // Token'ı header'a ekle
@@ -267,10 +267,9 @@ namespace TravelStaff.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction("Travels", new { id = userId }); // Güncelleme başarılıysa seyahatler sayfasına yönlendir
+                return RedirectToAction("Travels", new { id = userId }); //burada userid yerine secili travelin kullanici idsin alinsin veya baska sayfsya yonlendirilsin
             }
 
-            // API çağrısı başarısızsa güncelleme DTO'sunu tekrar gör
             return View(updateTravelDto);
         }
 

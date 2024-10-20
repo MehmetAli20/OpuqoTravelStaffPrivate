@@ -61,7 +61,7 @@ namespace TravelStaffAPI.Controllers
                 {
                     Name = staff.Name,
                     Surname = staff.Surname,
-                    Password = staff.Password,
+                    //Password = staff.Password,
                     // IsAdmin = staff.IsAdmin,
                     //AdminID = staff.AdminID
                 });

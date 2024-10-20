@@ -12,8 +12,8 @@ namespace EntityLayer.DTOs.StaffDTOs
             public string Surname { get; set; }
             public string UserName { get; set; }
             public string Email { get; set; }                     
-            public string Pw{ get; set; }
-            public string ConfirmPw { get; set; }
+            public string Password{ get; set; }
+            public string ConfirmPassword { get; set; }
             public bool IsAdmin { get; set; }
             public int? AdminID { get; set; }
 

@@ -22,6 +22,33 @@
 	<div class="container" id="container">
 		<div class="form-container sign-up-container">
             <partial name="~/Views/PartialViews/Auth/RegisterFormPartialView.cshtml" model="Model?.RegisterDto" />
+
+		</div>
+		<div class="form-container sign-in-container">
+			<partial name="~/Views/PartialViews/Auth/LoginFormPartialView.cshtml" model="Model?.LoginDto" />
+		</div>
+		<div class="overlay-container">
+			<div class="overlay">
+				<div class="overlay-panel overlay-left">
+					<h1>Tekrardan Hoşgeldiniz!</h1>
+					<p>Üyeyseniz giriş yapınız</p>
+					<button class="ghost" id="signIn">Giriş Yap</button>
+				</div>
+				<div class="overlay-panel overlay-right">
+					<h1>Selam, Ekip!</h1>
+					<p>Seyahat etmek için kişisel bilgilerini gir.</p>
+					<button class="ghost" id="signUp">Kaydol</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer>
+		<p>Created by Opuqo</p>
+	</footer>
+	@RenderBody()
+	<script src="~/js/auth.js"></script>
+</body>
+</html>
 @*		<form asp-controller="Auth" asp-action="Register" method="post">
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
@@ -66,10 +93,7 @@
                 </div>   
                 <button asp-controller="Auth" asp-action="Register">Kaydol</button>    
             </form>*@
-		</div>
-		<div class="form-container sign-in-container">
-			<partial name="~/Views/PartialViews/Auth/LoginFormPartialView.cshtml" model="Model?.LoginDto" />
-@*			<form asp-controller="Auth" asp-action="Login" id="loginForm">
+            @*			<form asp-controller="Auth" asp-action="Login" id="loginForm">
 				<div class="form-group">
                     <label asp-for="LoginDto.UserName">Username</label>
 					<input asp-for="LoginDto.UserName" type="text" class="form-control" required />
@@ -80,26 +104,3 @@
 				</div>				
 				<button>Giriş yap</button>
 			</form>*@
-		</div>
-		<div class="overlay-container">
-			<div class="overlay">
-				<div class="overlay-panel overlay-left">
-					<h1>Tekrardan Hoşgeldiniz!</h1>
-					<p>Üyeyseniz giriş yapınız</p>
-					<button class="ghost" id="signIn">Giriş Yap</button>
-				</div>
-				<div class="overlay-panel overlay-right">
-					<h1>Selam, Ekip!</h1>
-					<p>Seyahat etmek için kişisel bilgilerini gir.</p>
-					<button class="ghost" id="signUp">Kaydol</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<footer>
-		<p>Created by Opuqo</p>
-	</footer>
-	@RenderBody()
-	<script src="~/js/auth.js"></script>
-</body>
-</html>

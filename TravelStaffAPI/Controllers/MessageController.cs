@@ -61,14 +61,13 @@ namespace TravelStaffAPI.Controllers
         {
             var info = createMessageDto.FromAdmin;
             if (ModelState.IsValid)
-            {
-                // Admin olup olmadığını gelen FromAdmin bilgisinden anlayarak mesajı ekleyelim
+            {             
                 var message = new CreateMessageDto
                 {
                     TravelID = createMessageDto.TravelID,
                     Content = createMessageDto.Content,
                     SendDate = DateTime.Now,
-                    FromAdmin = createMessageDto.FromAdmin, // Burada FromAdmin'i kullanıyoruz
+                    FromAdmin = createMessageDto.FromAdmin, 
                     Active = true
                 };
 

@@ -46,7 +46,7 @@ namespace TravelStaff.Controllers
                 return RedirectToAction("Login", "Auth", new {authLayoutDto=new AuthLayoutDto{ RegisterDto = registerDto }});
             }
             
-            HttpClient client = httpClientFactory.CreateClient();
+            HttpClient client = httpClientFactory.CreateClient("TravelStaff");
             var json = JsonConvert.SerializeObject(registerDto);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(_baseUrl + "/api/auth/register", data);
